@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 bot = Bot(cfg.TOKEN)
 dp = Dispatcher(bot)
-db = DataBase('localhost', '5432', 'anonchat', 'anon_user', 'anon_pwd')
+db = DataBase('192.168.2.35', '5432', 'anonchat', 'anon_user', 'anon828282')
 
 
 @dp.message_handler(commands=['start'])
