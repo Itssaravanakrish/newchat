@@ -35,12 +35,14 @@ async def stop(message: types.Message):
             await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT, reply_markup=markup)
             await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markup)
         else:
+
             await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT)
 
 @dp.message_handler(commands=['next'])
 async def next(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         chat_info = db.get_active_chat(message.from_user.id)
+        queue_info = db.get_queue(message.from_user.id)
         if chat_info != False:
             db.delete_chat(message.from_user.id)
             markups = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
@@ -65,14 +67,7 @@ async def next(message: types.Message):
                 await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
                 await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
         else:
-            await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT)
-
-@dp.message_handler(content_types=['text'])
-async def text(message: types.Message):
-    if message.chat.type == types.ChatType.PRIVATE:
-        if message.text == cfg.SEARCH:
-            chat_info = db.get_active_chat(message.from_user.id)
-            if chat_info == False:
+            if queue_info == False:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                 button1 = types.KeyboardButton(cfg.STOP_SEARCH)
                 markup.add(button1)
@@ -90,6 +85,36 @@ async def text(message: types.Message):
                     await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
                     await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
             else:
+                await message.answer(cfg.CANCEL_SEARCH_PROCESS)
+
+
+@dp.message_handler(content_types=['text'])
+async def text(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        if message.text == cfg.SEARCH:
+            chat_info = db.get_active_chat(message.from_user.id)
+            queue_info = db.get_queue(message.from_user.id)
+            if chat_info == False:
+                if queue_info == False:
+                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                    button1 = types.KeyboardButton(cfg.STOP_SEARCH)
+                    markup.add(button1)
+
+                    chat_two = db.get_user_queue()
+
+                    if db.create_chat(message.from_user.id, chat_two) == False:
+                        db.add_queue(message.from_user.id)
+                        await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup)
+                    else:
+                        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                        buttons1 = types.KeyboardButton(cfg.SEARCH_DRUGOGO)
+                        buttons2 = types.KeyboardButton(cfg.STOP_DIALOG)
+                        markup1.add(buttons1, buttons2)
+                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
+                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
+                else:
+                    await message.answer(cfg.CANCEL_SEARCH_PROCESS)
+            else:
                 await message.answer(cfg.CANCEL_TEXT)
         elif message.text == cfg.STOP_DIALOG:
             chat_info = db.get_active_chat(message.from_user.id)
@@ -101,7 +126,7 @@ async def text(message: types.Message):
                 await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT, reply_markup=markup)
                 await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markup)
             else:
-                await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT)
+                await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT)
         elif message.text == cfg.STOP_SEARCH:
             if db.get_queue(message.from_user.id):
                 db.delete_queue(message.from_user.id)

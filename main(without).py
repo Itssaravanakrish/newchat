@@ -1,0 +1,78 @@
+from aiogram import Bot, Dispatcher, executor, types
+from data import DataBase
+# from aiogram.dispatcher.filters.state import State, StatesGroup
+# from aiogram.dispatcher.storage import FSMContext
+# from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import config as cfg
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+bot = Bot(cfg.TOKEN)
+dp = Dispatcher(bot)
+db = DataBase('localhost', '5432', 'anonchat', 'anon_user', 'anon_pwd')
+
+
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        if(not db.check_user(message.from_user.id)):
+            db.add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
+        await message.answer(cfg.START)
+
+@dp.message_handler(commands=['stop'])
+async def stop(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        chat_info = db.get_active_chat(message.from_user.id)
+        if db.get_queue(message.from_user.id):
+            db.delete_queue(message.from_user.id)
+            await message.answer(cfg.STOP_SEARCH_TEXT)
+        elif chat_info != False:
+            db.delete_chat(message.from_user.id)
+            await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT)
+            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK)
+        else:
+            await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT)
+
+
+@dp.message_handler(commands=['next'])
+async def next(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        chat_info = db.get_active_chat(message.from_user.id)
+        queue_info = db.get_queue(message.from_user.id)
+        if chat_info != False:
+            db.delete_chat(message.from_user.id)
+            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK)
+
+            chat_two = db.get_user_queue()
+
+            if db.create_chat(message.from_user.id, chat_two) == False:
+                db.add_queue(message.from_user.id)
+                await message.answer(cfg.SEARCH_PROCESS)
+            else:
+
+                await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE)
+                await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE)
+        else:
+            if queue_info == False:
+
+                chat_two = db.get_user_queue()
+
+                if db.create_chat(message.from_user.id, chat_two) == False:
+                    db.add_queue(message.from_user.id)
+                    await message.answer(cfg.SEARCH_PROCESS)
+                else:
+                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE)
+                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE)
+            else:
+                await message.answer(cfg.CANCEL_SEARCH_PROCESS)
+
+@dp.message_handler(content_types=['text'])
+async def text(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        chat_info = db.get_active_chat(message.from_user.id)
+        if chat_info != False:
+            await dp.bot.send_message(chat_info, message.text)
+
+if __name__ == '__main__':
+    executor.start_polling(dp)

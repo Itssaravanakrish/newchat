@@ -34,7 +34,11 @@ class DataBase:
     def get_queue(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT chat_id FROM queue WHERE chat_id=%s", (user_id,))
-            return bool(len(self.cursor.fetchall()))
+            que_info = self.cursor.fetchone()
+            if que_info is None:
+                return False
+            else:
+                return True
 
     def get_user_queue(self):
         with self.connect:
