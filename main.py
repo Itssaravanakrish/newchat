@@ -63,7 +63,8 @@ async def next(message: types.Message):
                 markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                 buttons1 = types.KeyboardButton(cfg.SEARCH_DRUGOGO)
                 buttons2 = types.KeyboardButton(cfg.STOP_DIALOG)
-                markup1.add(buttons1, buttons2)
+                buttons3 = types.KeyboardButton(cfg.TAKE_MY_LINK)
+                markup1.add(buttons1, buttons3, buttons2)
                 await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
                 await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
         else:
@@ -81,7 +82,8 @@ async def next(message: types.Message):
                     markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                     buttons1 = types.KeyboardButton(cfg.SEARCH_DRUGOGO)
                     buttons2 = types.KeyboardButton(cfg.STOP_DIALOG)
-                    markup1.add(buttons1, buttons2)
+                    buttons3 = types.KeyboardButton(cfg.TAKE_MY_LINK)
+                    markup1.add(buttons1, buttons3, buttons2)
                     await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
                     await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
             else:
@@ -109,7 +111,8 @@ async def text(message: types.Message):
                         markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                         buttons1 = types.KeyboardButton(cfg.SEARCH_DRUGOGO)
                         buttons2 = types.KeyboardButton(cfg.STOP_DIALOG)
-                        markup1.add(buttons1, buttons2)
+                        buttons3 = types.KeyboardButton(cfg.TAKE_MY_LINK)
+                        markup1.add(buttons1, buttons3, buttons2)
                         await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
                         await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
                 else:
@@ -125,6 +128,13 @@ async def text(message: types.Message):
                 markup.add(button1)
                 await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT, reply_markup=markup)
                 await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markup)
+            else:
+                await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT)
+        elif message.text == cfg.TAKE_MY_LINK:
+            chat_info = db.get_active_chat(message.from_user.id)
+            if chat_info != False:
+                await dp.bot.send_message(message.from_user.id, cfg.CORRECT_MY_LINK, parse_mode=types.ParseMode.MARKDOWN)
+                await dp.bot.send_message(chat_info, cfg.CORRET_SOB_LINK, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT)
         elif message.text == cfg.STOP_SEARCH:
