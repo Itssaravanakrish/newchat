@@ -22,8 +22,8 @@ STOP_DIALOG_TEXT = "Вы закончили диалог с собеседник
 SEARCH_DRUGOGO_TEXT = "Вы закончили диалог с собеседником и начали поиск нового собеседника."
 
 STOP_DIALOG_TEXT_SOBESEDNIK = "Ваш собеседник закончил с вами диалог.\nДля того чтобы найти собеседника, напишите /next"
-CANCEl_STOP_DIALOG_TEXT = "❌ Вы не находитесь в диалоге"
-CANCEl_STOP_SEARCH_TEXT = "❌ Вы не находитесь в поиске"
+CANCEl_STOP_DIALOG_TEXT = "❌ Вы не находитесь в поиске"
+CANCEl_STOP_SEARCH_TEXT = "❌ Вы не находитесь в диалоге"
 CANCEL_TEXT = "❌ Вы уже находитесь в диалоге."
 CANCEL_SEARCH_PROCESS = "❌ Вы уже находитесь в поиске."
 
