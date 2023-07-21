@@ -19,7 +19,7 @@ async def start(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         if(not db.check_user(message.from_user.id)):
             db.add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1, one_time_keyboard=True)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
         button1 = types.KeyboardButton(cfg.SEARCH)
         markup.add(button1)
         await message.answer(cfg.START, reply_markup=markup)
