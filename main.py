@@ -5,6 +5,7 @@ from data import DataBase
 # from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import config as cfg
 import logging
+import functions as func
 
 logging.basicConfig(level=logging.INFO)
 
@@ -134,7 +135,7 @@ async def text(message: types.Message):
             chat_info = db.get_active_chat(message.from_user.id)
             if chat_info != False:
                 await dp.bot.send_message(message.from_user.id, cfg.CORRECT_MY_LINK, parse_mode=types.ParseMode.MARKDOWN)
-                await dp.bot.send_message(chat_info, cfg.CORRET_SOB_LINK, parse_mode=types.ParseMode.MARKDOWN)
+                await dp.bot.send_message(chat_info, f"Ваш собеседник дал {func.nick_with_link('ссылку', message.from_user.id)} на свой аккаунт телеграм.", parse_mode=types.ParseMode.MARKDOWN)
             else:
                 await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT)
         elif message.text == cfg.STOP_SEARCH:
