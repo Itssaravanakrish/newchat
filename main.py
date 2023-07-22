@@ -1,9 +1,9 @@
 from aiogram import Bot, Dispatcher, executor, types
 from data import DataBase
 from aiogram.utils.exceptions import BotBlocked
-# from aiogram.dispatcher.filters.state import State, StatesGroup
-# from aiogram.dispatcher.storage import FSMContext
-# from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher.storage import FSMContext
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import config as cfg
 import logging
 import functions as func
@@ -11,8 +11,12 @@ import functions as func
 logging.basicConfig(level=logging.INFO)
 
 bot = Bot(cfg.TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher(bot, storage=MemoryStorage())
 db = DataBase('192.168.2.35', '5432', 'anonchat', 'anon_user', 'anon828282')
+
+
+class register(StatesGroup):
+    reg_1 = State()
 
 
 @dp.message_handler(commands=['start'])
@@ -20,14 +24,42 @@ async def start(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         chat_info = db.get_active_chat(message.from_user.id)
         if(not db.check_user(message.from_user.id)):
-            db.add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
-        if chat_info == False:
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            button1 = types.KeyboardButton(cfg.SEARCH)
-            markup.add(button1)
-            await message.answer(cfg.START, reply_markup=markup)
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton("Мужской", callback_data='male')
+            button2 = types.InlineKeyboardButton("Женский", callback_data='female')
+            markup.add(button1, button2)
+            await message.answer(cfg.REGISTER_TEXT, reply_markup=markup)
+            await register.reg_1.set()
         else:
-            await message.answer(cfg.CANCEL_TEXT)
+            if chat_info == False:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                button1 = types.KeyboardButton(cfg.SEARCH)
+                markup.add(button1)
+                await message.answer(cfg.START, reply_markup=markup)
+            else:
+                await message.answer(cfg.CANCEL_TEXT)
+
+@dp.callback_query_handler(state=register.reg_1)
+async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
+    if callback_query.message.chat.type == types.ChatType.PRIVATE:
+        if callback_query.data == 'male':
+            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'male')
+            await state.finish()
+        elif callback_query.data == 'female':
+            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'female')
+            await state.finish()
+
+@dp.message_handler(state=register.reg_1)
+async def error_text_register(message: types.Message, state: FSMContext):
+    if message.chat.type == types.ChatType.PRIVATE:
+        if message.text or message.photo or message.document:
+            await message.answer(cfg.ERROR_REGISTER)
+        elif message.text == "/register":
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton("Мужской", callback_data='male')
+            button2 = types.InlineKeyboardButton("Женский", callback_data='female')
+            markup.add(button1, button2)
+            await message.answer(cfg.REGISTER_TEXT, reply_markup=markup)
 
 @dp.message_handler(commands=['stop'])
 async def stop(message: types.Message):

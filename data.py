@@ -11,9 +11,9 @@ class DataBase:
         )
         self.cursor = self.connect.cursor()
 
-    def add_user(self, user_id, first_name, username):
+    def add_user(self, user_id, first_name, username, male):
         with self.connect:
-            self.cursor.execute("INSERT INTO users(user_id, first_name, username) VALUES(%s, %s, %s)", (user_id, first_name, username,))
+            self.cursor.execute("INSERT INTO users(user_id, first_name, username, male) VALUES(%s, %s, %s, %s)", (user_id, first_name, username, male,))
             self.connect.commit()
 
     def check_user(self, user_id):
@@ -76,4 +76,9 @@ class DataBase:
                     return users[1]
             else:
                 return False
+
+    def get_male(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT male FROM users WHERE user_id=%s", (user_id,))
+            return self.cursor.fetchone()[0]
 
