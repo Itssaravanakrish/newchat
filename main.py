@@ -85,13 +85,20 @@ async def next(message: types.Message):
                     db.add_queue(message.from_user.id)
                     await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup)
                 else:
-                    markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    buttons1 = types.KeyboardButton(cfg.SEARCH_DRUGOGO)
-                    buttons2 = types.KeyboardButton(cfg.STOP_DIALOG)
-                    buttons3 = types.KeyboardButton(cfg.TAKE_MY_LINK)
-                    markup1.add(buttons1, buttons3, buttons2)
-                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
-                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
+                    try:
+                        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                        buttons1 = types.KeyboardButton(cfg.SEARCH_DRUGOGO)
+                        buttons2 = types.KeyboardButton(cfg.STOP_DIALOG)
+                        buttons3 = types.KeyboardButton(cfg.TAKE_MY_LINK)
+                        markup1.add(buttons1, buttons3, buttons2)
+                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=markup1)
+                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=markup1)
+                    except BotBlocked:
+                        db.delete_chat(message.from_user.id)
+                        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                        button1 = types.KeyboardButton(cfg.SEARCH)
+                        markup.add(button1)
+                        await message.answer(cfg.BOT_BLOCKED, reply_markup=markup)
             else:
                 await message.answer(cfg.CANCEL_SEARCH_PROCESS)
 
