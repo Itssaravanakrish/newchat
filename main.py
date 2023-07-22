@@ -189,7 +189,7 @@ async def text(message: types.Message):
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                     button1 = types.KeyboardButton(cfg.SEARCH)
                     markup.add(button1)
-                    await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup)
+                    await message.answer(cfg.BOT_BLOCKED, reply_markup=markup)
 
 
 if __name__ == '__main__':
