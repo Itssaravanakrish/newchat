@@ -185,7 +185,7 @@ async def text(message: types.Message):
                 try:
                     await dp.bot.send_message(chat_info, message.text)
                 except BotBlocked:
-                    db.delete_queue(message.from_user.id)
+                    db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                     button1 = types.KeyboardButton(cfg.SEARCH)
                     markup.add(button1)
