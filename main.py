@@ -42,11 +42,18 @@ async def start(message: types.Message):
 @dp.callback_query_handler(state=register.reg_1)
 async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        button1 = types.KeyboardButton(cfg.SEARCH)
+        markup.add(button1)
         if callback_query.data == 'male':
             db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'male')
+            await callback_query.answer("Вы успешно выбрали мужской пол")
+            await callback_query.message.answer(cfg.START, reply_markup=markup)
             await state.finish()
         elif callback_query.data == 'female':
             db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'female')
+            await callback_query.answer("Вы успешно выбрали женский пол")
+            await callback_query.message.answer(cfg.START, reply_markup=markup)
             await state.finish()
 
 @dp.message_handler(state=register.reg_1)
