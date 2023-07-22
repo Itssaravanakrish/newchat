@@ -1,5 +1,6 @@
 from aiogram import Bot, Dispatcher, executor, types
 from data import DataBase
+from aiogram.utils.exceptions import BotBlocked
 # from aiogram.dispatcher.filters.state import State, StatesGroup
 # from aiogram.dispatcher.storage import FSMContext
 # from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -17,12 +18,16 @@ db = DataBase('192.168.2.35', '5432', 'anonchat', 'anon_user', 'anon828282')
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
+        chat_info = db.get_active_chat(message.from_user.id)
         if(not db.check_user(message.from_user.id)):
             db.add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-        button1 = types.KeyboardButton(cfg.SEARCH)
-        markup.add(button1)
-        await message.answer(cfg.START, reply_markup=markup)
+        if chat_info == False:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(cfg.SEARCH)
+            markup.add(button1)
+            await message.answer(cfg.START, reply_markup=markup)
+        else:
+            await message.answer(cfg.CANCEL_TEXT)
 
 @dp.message_handler(commands=['stop'])
 async def stop(message: types.Message):
@@ -177,7 +182,15 @@ async def text(message: types.Message):
         else:
             chat_info = db.get_active_chat(message.from_user.id)
             if chat_info != False:
-                await dp.bot.send_message(chat_info, message.text)
+                try:
+                    await dp.bot.send_message(chat_info, message.text)
+                except BotBlocked:
+                    db.delete_queue(message.from_user.id)
+                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                    button1 = types.KeyboardButton(cfg.SEARCH)
+                    markup.add(button1)
+                    await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup)
+
 
 if __name__ == '__main__':
     executor.start_polling(dp)
