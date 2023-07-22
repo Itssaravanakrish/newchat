@@ -50,16 +50,16 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
             await state.finish()
 
 @dp.message_handler(state=register.reg_1)
-async def error_text_register(message: types.Message, state: FSMContext):
+async def error_text_register(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
-        if message.text or message.photo or message.document:
-            await message.answer(cfg.ERROR_REGISTER)
-        elif message.text == "/register":
+        if message.text == "/register":
             markup = types.InlineKeyboardMarkup(row_width=2)
             button1 = types.InlineKeyboardButton("Мужской", callback_data='male')
             button2 = types.InlineKeyboardButton("Женский", callback_data='female')
             markup.add(button1, button2)
             await message.answer(cfg.REGISTER_TEXT, reply_markup=markup)
+        else:
+            await message.answer(cfg.ERROR_REGISTER)
 
 @dp.message_handler(commands=['stop'])
 async def stop(message: types.Message):
