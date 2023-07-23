@@ -93,6 +93,6 @@ class DataBase:
 
     def del_dates(self, user_id):
         with self.connect:
-            self.cursor.execute("UPDATE users SET dates=NULL WHERE id=%s", (user_id,))
+            self.cursor.execute("UPDATE users SET dates=NULL WHERE user_id=%s", (user_id,))
             self.connect.commit()
 
