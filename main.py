@@ -182,7 +182,7 @@ async def text(message: types.Message):
                 else:
                     await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
             else:
-                await message.answer(cfg.CANCEL_TEXT)
+                await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
         elif message.text == cfg.STOP_SEARCH:
             if db.get_queue(message.from_user.id):
                 db.delete_queue(message.from_user.id)
