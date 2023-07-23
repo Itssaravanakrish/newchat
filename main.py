@@ -255,10 +255,17 @@ async def successful_payment(message: types.Message):
     for k, v in payment_info.items():
         print(f"{k} = {v}")
 
-    current_date = datetime.now()
-    next_day = current_date + timedelta(days=1)
-    db.add_dates(message.from_user.id, next_day)
-    await bot.send_message(message.chat.id, f"Платёж на сумму {message.successful_payment.total_amount // 100} {message.successful_payment.currency} прошёл успешно!!!")
+    # {message.successful_payment.total_amount // 100} {message.successful_payment.currency}
+    if db.check_dates(message.from_user.id) is not None:
+        current_date = db.check_dates(message.from_user.id)
+        next_day = current_date + timedelta(days=1)
+        db.update_dates(message.from_user.id, next_day)
+        await bot.send_message(message.chat.id, f"Вы успешно продлили подписку на 1 день!")
+    else:
+        current_date = datetime.now()
+        next_day = current_date + timedelta(days=1)
+        db.add_dates(message.from_user.id, next_day)
+        await bot.send_message(message.chat.id, f"Вы успешно приобрели подписку на 1 день!")
 
 
 if __name__ == '__main__':
