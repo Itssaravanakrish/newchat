@@ -84,7 +84,7 @@ class DataBase:
 
     def add_dates(self, user_id, dates):
         with self.connect:
-            self.cursor.execute("UPDATE user_id SET dates=%s WHERE user_id=%s", (dates, user_id,))
+            self.cursor.execute("UPDATE users SET dates=%s WHERE user_id=%s", (dates, user_id,))
 
     def check_dates(self, user_id):
         with self.connect:
