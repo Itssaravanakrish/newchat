@@ -82,3 +82,17 @@ class DataBase:
             self.cursor.execute("SELECT male FROM users WHERE user_id=%s", (user_id,))
             return self.cursor.fetchone()[0]
 
+    def add_dates(self, user_id, dates):
+        with self.connect:
+            self.cursor.execute("UPDATE user_id SET dates=%s WHERE user_id=%s", (dates, user_id,))
+
+    def check_dates(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT dates FROM users WHERE user_Id=%s", (user_id,))
+            return self.cursor.fetchone()[0]
+
+    def del_dates(self, user_id):
+        with self.connect:
+            self.cursor.execute("UPDATE users SET dates=NULL WHERE id=%s", (user_id,))
+            self.connect.commit()
+
