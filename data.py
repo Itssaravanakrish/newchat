@@ -98,5 +98,5 @@ class DataBase:
 
     def update_dates(self, user_id, dates):
         with self.connect:
-            self.cursor.execute("UPDATE users SET dates=dates+%s WHERE user_id=%s", (dates, user_id,))
+            self.cursor.execute("UPDATE users SET dates=%s WHERE user_id=%s", (dates, user_id,))
             self.connect.commit()
