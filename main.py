@@ -137,6 +137,8 @@ async def next(message: types.Message):
             else:
                 await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE)
                 await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE)
+        else:
+            await message.answer(cfg.CANCEL_SEARCH_PROCESS)
 
 @dp.message_handler(content_types=['text'])
 async def text(message: types.Message):
