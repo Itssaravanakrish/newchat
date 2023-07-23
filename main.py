@@ -101,8 +101,8 @@ async def search(message: types.Message):
                     await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
                 else:
                     try:
-                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
-                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
+                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                     except BotBlocked:
                         db.delete_chat(message.from_user.id)
                         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
@@ -171,8 +171,8 @@ async def text(message: types.Message):
                         await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
                     else:
                         try:
-                            await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
-                            await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
+                            await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                            await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                         except BotBlocked:
                             db.delete_chat(message.from_user.id)
                             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
