@@ -21,6 +21,8 @@ PRICE = types.LabeledPrice(label="Подписка на день", amount=500*10
 class register(StatesGroup):
     reg_1 = State()
 
+class search_male(StatesGroup):
+    buttons_search = State()
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
@@ -208,9 +210,30 @@ async def text(message: types.Message):
                 if current_date > database_date_obj:
                     # эта функция если прошла подписка
                     db.del_dates(message.from_user.id)
+                    if cfg.PAYMENTS_TOKEN.split(':') == 'TEST':
+                        await message.answer("Тестовый платёж")
+
+
+                    await bot.send_invoice(message.chat.id,
+                                        title="Подписка на бота",
+                                        description="Активация подписки на бота на 1 день!",
+                                        provider_token=cfg.PAYMENTS_TOKEN,
+                                        currency='rub',
+                                        photo_url="https://cdn.xxl.thumbs.canstockphoto.ru/%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0-%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D1%81%D1%82%D0%BE%D0%BA%D0%BE%D0%B2%D0%B0%D1%8F-%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F_csp5148789.jpg",
+                                        photo_width=360,
+                                        photo_height=254,
+                                        is_flexible=False,
+                                        prices=[PRICE],
+                                        start_parameter='one-day-subscription',
+                                        payload='test-invoice-payload')
                 elif current_date < database_date_obj:
-                    # кнопки поиск мужчины или женщины
-                    await message.answer("у вас есть подписка")
+                    # кнопки поиск мужчины или женщины если есть подписка
+                    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+                    button1 = types.KeyboardButton(cfg.SEARCH_MALE_MALE)
+                    button2 = types.KeyboardButton(cfg.SEARCH_MALE_FEMALE)
+                    markup.add(button1, button2)
+                    await message.answer(cfg.BUTTON_MALE_TEXT, reply_markup=markup)
+                    await search_male.buttons_search.set()
             else:
                 if cfg.PAYMENTS_TOKEN.split(':') == 'TEST':
                     await message.answer("Тестовый платёж")
@@ -267,6 +290,17 @@ async def successful_payment(message: types.Message):
         next_day = current_date + timedelta(days=1)
         db.add_dates(message.from_user.id, next_day)
         await bot.send_message(message.chat.id, f"Вы успешно приобрели подписку на 1 день!")
+
+@dp.message_handler(content_types=['text'], state=search_male.buttons_search)
+async def search_buttons(message: types.Message, state: FSMContext):
+    if message.chat.type == types.ChatType.PRIVATE:
+        if message.text == cfg.BACK:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(cfg.SEARCH)
+            button2 = types.KeyboardButton(cfg.SEARCH_MALE)
+            markup.add(button1, button2)
+            await message.answer(cfg.BACK_TEXT, reply_markup=markup)
+            await state.finish()
 
 
 if __name__ == '__main__':
