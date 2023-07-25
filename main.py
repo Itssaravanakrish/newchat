@@ -231,8 +231,9 @@ async def text(message: types.Message):
                     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
                     button1 = types.KeyboardButton(cfg.SEARCH_MALE_MALE)
                     button2 = types.KeyboardButton(cfg.SEARCH_MALE_FEMALE)
-                    markup.add(button1, button2)
-                    await message.answer(cfg.BUTTON_MALE_TEXT, reply_markup=markup)
+                    button3 = types.KeyboardButton(cfg.BACK)
+                    markup.add(button1, button2, button3)
+                    await message.answer(cfg.BUTTON_MALE_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
                     await search_male.buttons_search.set()
             else:
                 if cfg.PAYMENTS_TOKEN.split(':') == 'TEST':
@@ -299,7 +300,7 @@ async def search_buttons(message: types.Message, state: FSMContext):
             button1 = types.KeyboardButton(cfg.SEARCH)
             button2 = types.KeyboardButton(cfg.SEARCH_MALE)
             markup.add(button1, button2)
-            await message.answer(cfg.BACK_TEXT, reply_markup=markup)
+            await message.answer(cfg.BACK_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await state.finish()
 
 
