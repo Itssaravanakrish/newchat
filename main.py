@@ -43,7 +43,7 @@ async def start(message: types.Message):
                 await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
 #command search
-async def search(message: types.Message):
+async def search(message):
     chat_info = db.get_active_chat(message.from_user.id)
     queue_info = db.get_queue(message.from_user.id)
     if chat_info == False:
@@ -120,7 +120,7 @@ async def stop(message: types.Message):
 @dp.message_handler(commands=['search'])
 async def search(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
-        search()
+        await search(message)
 
 @dp.message_handler(commands=['next'])
 async def next(message: types.Message):
@@ -177,7 +177,7 @@ async def cancel_search(message: types.Message):
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         if message.text == cfg.SEARCH:
-            search()
+            await search(message)
         elif message.text == cfg.STOP_SEARCH:
             if db.get_queue(message.from_user.id):
                 db.delete_queue(message.from_user.id)
