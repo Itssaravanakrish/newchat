@@ -218,9 +218,9 @@ async def text(message: types.Message):
                         await dp.bot.send_message(chat_info, message.text)
                     elif message.photo:
                         if message.caption:
-                            await dp.bot.send_photo(chat_info, message.photo, caption=message.caption)
+                            await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                         else:
-                            await dp.bot.send_photo(chat_info, message.photo)
+                            await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
                     else:
                         await message.answer(cfg.CANCEL_DOCUMENT_TEXT, parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
