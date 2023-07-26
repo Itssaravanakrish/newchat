@@ -118,7 +118,7 @@ async def stop(message: types.Message):
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['search'])
-async def search(message: types.Message):
+async def search_commands(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         await search(message)
 
