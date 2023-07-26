@@ -152,7 +152,7 @@ async def link(message: types.Message):
         chat_info = db.get_active_chat(message.from_user.id)
         if chat_info != False:
             await dp.bot.send_message(chat_info, f"Собеседник отправил вам {func.nick_with_link('ссылку', chat_info)} своей телеграм аккаунта", parse_mode=types.ParseMode.MARKDOWN)
-            await message.answer(cfg.CORRECT_MY_LINK)
+            await message.answer(cfg.CORRECT_MY_LINK, parse_mpde=types.ParseMode.MARKDOWN)
         else:
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
