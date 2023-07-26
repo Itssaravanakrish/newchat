@@ -223,9 +223,9 @@ async def text(message: types.Message):
                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
                     elif message.video:
                         if message.caption:
-                            await dp.bot.send_video(chat_info, message.video, caption=message.caption)
+                            await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption)
                         else:
-                            await dp.bot.send_video(chat_info, message.video)
+                            await dp.bot.send_video(chat_info, message.video.file_id)
                     else:
                         await message.answer(cfg.CANCEL_DOCUMENT_TEXT, parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
