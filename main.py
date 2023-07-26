@@ -43,38 +43,35 @@ async def start(message: types.Message):
                 await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
 #command search
-@dp.message_handler(content_types=['text'])
 async def search(message: types.Message):
-    if message.text == cfg.SEARCH or '/search':
-        chat_info = db.get_active_chat(message.from_user.id)
-        queue_info = db.get_queue(message.from_user.id)
-        if chat_info == False:
-            if queue_info == False:
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                button1 = types.KeyboardButton(cfg.STOP_SEARCH)
-                markup.add(button1)
+    chat_info = db.get_active_chat(message.from_user.id)
+    queue_info = db.get_queue(message.from_user.id)
+    if chat_info == False:
+        if queue_info == False:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(cfg.STOP_SEARCH)
+            markup.add(button1)
 
-                chat_two = db.get_user_queue()
+            chat_two = db.get_user_queue()
 
-                if db.create_chat(message.from_user.id, chat_two) == False:
-                    db.add_queue(message.from_user.id)
-                    await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                else:
-                    try:
-                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                    except BotBlocked:
-                        db.delete_chat(message.from_user.id)
-                        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                        button1 = types.KeyboardButton(cfg.SEARCH)
-                        button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                        markup.add(button1, button2)
-                        await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            if db.create_chat(message.from_user.id, chat_two) == False:
+                db.add_queue(message.from_user.id)
+                await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
-                await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
+                try:
+                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                except BotBlocked:
+                    db.delete_chat(message.from_user.id)
+                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                    button1 = types.KeyboardButton(cfg.SEARCH)
+                    button2 = types.KeyboardButton(cfg.SEARCH_MALE)
+                    markup.add(button1, button2)
+                    await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
-            await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
-
+            await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
+    else:
+        await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.callback_query_handler(state=register.reg_1)
 async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
@@ -119,6 +116,11 @@ async def stop(message: types.Message):
         else:
 
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+
+@dp.message_handler(commands=['search'])
+async def search(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        search()
 
 @dp.message_handler(commands=['next'])
 async def next(message: types.Message):
@@ -174,7 +176,9 @@ async def cancel_search(message: types.Message):
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
-        if message.text == cfg.STOP_SEARCH:
+        if message.text == cfg.SEARCH:
+            search()
+        elif message.text == cfg.STOP_SEARCH:
             if db.get_queue(message.from_user.id):
                 db.delete_queue(message.from_user.id)
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
