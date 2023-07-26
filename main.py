@@ -168,7 +168,7 @@ async def cancel_search(message: types.Message):
         else:
             await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
-@dp.message_handler(content_types=['text', 'photo', 'document'])
+@dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         if message.text == cfg.SEARCH:
@@ -221,6 +221,11 @@ async def text(message: types.Message):
                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                         else:
                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
+                    elif message.video:
+                        if message.caption:
+                            await dp.bot.send_video(chat_info, message.video[-1].file_id, caption=message.caption)
+                        else:
+                            await dp.bot.send_video(chat_info, message.video[-1].file_id)
                     else:
                         await message.answer(cfg.CANCEL_DOCUMENT_TEXT, parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
