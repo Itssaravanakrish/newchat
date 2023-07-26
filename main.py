@@ -73,6 +73,17 @@ async def search(message):
     else:
         await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
+#command cancel_search
+async def cancel_search(message):
+    if db.get_queue(message.from_user.id):
+        db.delete_queue(message.from_user.id)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        button1 = types.KeyboardButton(cfg.SEARCH)
+        markup.add(button1)
+        await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+    else:
+        await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+
 @dp.callback_query_handler(state=register.reg_1)
 async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
@@ -162,16 +173,9 @@ async def link(message: types.Message):
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['cancel'])
-async def cancel_search(message: types.Message):
+async def cancel_search_commands(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
-        if db.get_queue(message.from_user.id):
-            db.delete_queue(message.from_user.id)
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            button1 = types.KeyboardButton(cfg.SEARCH)
-            markup.add(button1)
-            await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-        else:
-            await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+        await cancel_search(message)
 
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
@@ -179,14 +183,7 @@ async def text(message: types.Message):
         if message.text == cfg.SEARCH:
             await search(message)
         elif message.text == cfg.STOP_SEARCH:
-            if db.get_queue(message.from_user.id):
-                db.delete_queue(message.from_user.id)
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                button1 = types.KeyboardButton(cfg.SEARCH)
-                markup.add(button1)
-                await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-            else:
-                await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+            await cancel_search(message)
         else:
             chat_info = db.get_active_chat(message.from_user.id)
             queue_info = db.get_queue(message.from_user.id)
