@@ -21,8 +21,6 @@ PRICE = types.LabeledPrice(label="Подписка на день", amount=500*10
 class register(StatesGroup):
     reg_1 = State()
 
-class search_male(StatesGroup):
-    buttons_search = State()
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
@@ -39,8 +37,7 @@ async def start(message: types.Message):
             if chat_info == False:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                 button1 = types.KeyboardButton(cfg.SEARCH)
-                button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                markup.add(button1, button2)
+                markup.add(button1)
                 await message.answer(cfg.START, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
@@ -50,8 +47,7 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
         button1 = types.KeyboardButton(cfg.SEARCH)
-        button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-        markup.add(button1, button2)
+        markup.add(button1)
         if callback_query.data == 'male':
             db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'male')
             await callback_query.answer(cfg.MALE_CORRECT_TEXT)
@@ -83,8 +79,7 @@ async def stop(message: types.Message):
             db.delete_chat(message.from_user.id)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(cfg.SEARCH)
-            button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-            markup.add(button1, button2)
+            markup.add(button1)
             await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
@@ -115,8 +110,7 @@ async def search(message: types.Message):
                         db.delete_chat(message.from_user.id)
                         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                         button1 = types.KeyboardButton(cfg.SEARCH)
-                        button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                        markup.add(button1, button2)
+                        markup.add(button1)
                         await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
@@ -198,60 +192,10 @@ async def text(message: types.Message):
                 db.delete_queue(message.from_user.id)
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                 button1 = types.KeyboardButton(cfg.SEARCH)
-                button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                markup.add(button1, button2)
+                markup.add(button1)
                 await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
-        elif message.text == cfg.SEARCH_MALE:
-            current_date = datetime.now()
-            if db.check_dates(message.from_user.id) is not None:
-                database_date_obj = datetime.strptime(db.check_dates(message.from_user.id), '%Y-%m-%d %H:%M:%S.%f')
-                if current_date > database_date_obj:
-                    # эта функция если прошла подписка
-                    db.del_dates(message.from_user.id)
-                    if cfg.PAYMENTS_TOKEN.split(':') == 'TEST':
-                        await message.answer("Тестовый платёж")
-
-
-                    await bot.send_invoice(message.chat.id,
-                                        title="Подписка на бота",
-                                        description="Активация подписки на бота на 1 день!",
-                                        provider_token=cfg.PAYMENTS_TOKEN,
-                                        currency='rub',
-                                        photo_url="https://cdn.xxl.thumbs.canstockphoto.ru/%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0-%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D1%81%D1%82%D0%BE%D0%BA%D0%BE%D0%B2%D0%B0%D1%8F-%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F_csp5148789.jpg",
-                                        photo_width=360,
-                                        photo_height=254,
-                                        is_flexible=False,
-                                        prices=[PRICE],
-                                        start_parameter='one-day-subscription',
-                                        payload='test-invoice-payload')
-                elif current_date < database_date_obj:
-                    # кнопки поиск мужчины или женщины если есть подписка
-                    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-                    button1 = types.KeyboardButton(cfg.SEARCH_MALE_MALE)
-                    button2 = types.KeyboardButton(cfg.SEARCH_MALE_FEMALE)
-                    button3 = types.KeyboardButton(cfg.BACK)
-                    markup.add(button1, button2, button3)
-                    await message.answer(cfg.BUTTON_MALE_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                    await search_male.buttons_search.set()
-            else:
-                if cfg.PAYMENTS_TOKEN.split(':') == 'TEST':
-                    await message.answer("Тестовый платёж")
-
-
-                await bot.send_invoice(message.chat.id,
-                                       title="Подписка на бота",
-                                       description="Активация подписки на бота на 1 день!",
-                                       provider_token=cfg.PAYMENTS_TOKEN,
-                                       currency='rub',
-                                       photo_url="https://cdn.xxl.thumbs.canstockphoto.ru/%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0-%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D1%81%D1%82%D0%BE%D0%BA%D0%BE%D0%B2%D0%B0%D1%8F-%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F_csp5148789.jpg",
-                                       photo_width=360,
-                                       photo_height=254,
-                                       is_flexible=False,
-                                       prices=[PRICE],
-                                       start_parameter='one-day-subscription',
-                                       payload='test-invoice-payload')
         else:
             chat_info = db.get_active_chat(message.from_user.id)
             queue_info = db.get_queue(message.from_user.id)
@@ -262,46 +206,11 @@ async def text(message: types.Message):
                     db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                     button1 = types.KeyboardButton(cfg.SEARCH)
-                    button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                    markup.add(button1, button2)
+                    markup.add(button1)
                     await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             elif queue_info == False:
                 await message.answer(cfg.CANCEL_TEXT_BOT, parse_mode=types.ParseMode.MARKDOWN)
 
-@dp.pre_checkout_query_handler(lambda query: True)
-async def pre_checkout_query(pre_checkout_q: types.PreCheckoutQuery):
-    await bot.answer_pre_checkout_query(pre_checkout_q.id, ok=True)
-
-@dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
-async def successful_payment(message: types.Message):
-    print("SUCCESSFUL PAYMENT:")
-    payment_info = message.successful_payment.to_python()
-    for k, v in payment_info.items():
-        print(f"{k} = {v}")
-
-    # {message.successful_payment.total_amount // 100} {message.successful_payment.currency}
-    if db.check_dates(message.from_user.id) is not None:
-        # current_date = db.check_dates(message.from_user.id)
-        database_date_obj = datetime.strptime(db.check_dates(message.from_user.id), '%Y-%m-%d %H:%M:%S.%f')
-        next_day = database_date_obj + timedelta(days=1)
-        db.update_dates(message.from_user.id, next_day)
-        await bot.send_message(message.chat.id, f"Вы успешно продлили подписку на 1 день!")
-    else:
-        current_date = datetime.now()
-        next_day = current_date + timedelta(days=1)
-        db.add_dates(message.from_user.id, next_day)
-        await bot.send_message(message.chat.id, f"Вы успешно приобрели подписку на 1 день!")
-
-@dp.message_handler(content_types=['text'], state=search_male.buttons_search)
-async def search_buttons(message: types.Message, state: FSMContext):
-    if message.chat.type == types.ChatType.PRIVATE:
-        if message.text == cfg.BACK:
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            button1 = types.KeyboardButton(cfg.SEARCH)
-            button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-            markup.add(button1, button2)
-            await message.answer(cfg.BACK_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-            await state.finish()
 
 
 if __name__ == '__main__':
