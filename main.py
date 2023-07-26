@@ -84,7 +84,7 @@ async def stop(message: types.Message):
             await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
 
-            await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['search'])
 async def search(message: types.Message):
@@ -168,7 +168,7 @@ async def cancel_search(message: types.Message):
         else:
             await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
-@dp.message_handler(content_types=['text'])
+@dp.message_handler(content_types=['text', 'photo', 'document'])
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         if message.text == cfg.SEARCH:
@@ -214,7 +214,15 @@ async def text(message: types.Message):
             queue_info = db.get_queue(message.from_user.id)
             if chat_info != False:
                 try:
-                    await dp.bot.send_message(chat_info, message.text)
+                    if message.text:
+                        await dp.bot.send_message(chat_info, message.text)
+                    elif message.photo:
+                        if message.caption:
+                            await dp.bot.send_photo(chat_info, message.photo, caption=message.caption)
+                        else:
+                            await dp.bot.send_photo(chat_info, message.photo, caption=message.caption)
+                    else:
+                        await message.answer(cfg.CANCEL_DOCUMENT_TEXT, parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
                     db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
