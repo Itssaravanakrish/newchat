@@ -156,6 +156,18 @@ async def link(message: types.Message):
         else:
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
+@dp.message_handler(commands=['cancel'])
+async def cancel_search(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        if db.get_queue(message.from_user.id):
+            db.delete_queue(message.from_user.id)
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(cfg.SEARCH)
+            markup.add(button1)
+            await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+        else:
+            await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+
 @dp.message_handler(content_types=['text'])
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
