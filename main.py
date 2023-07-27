@@ -98,6 +98,22 @@ async def get_admin_channels(channel_usernames):
             admin_channels.append(channel_username)
     return admin_channels
 
+#check subcribed user in channel
+async def check_user_subscription(channel_id, user_id):
+    try:
+        # Получаем информацию о членстве пользователя в канале
+        chat_member = await bot.get_chat_member(channel_id, user_id)
+
+        # Проверяем, является ли пользователь участником канала
+        if chat_member.status == 'member':
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        # Если возникла ошибка, пользователь скорее всего не является участником канала
+        return False
+
 #command cancel_search
 async def cancel_search(message):
     if db.get_queue(message.from_user.id):
@@ -209,7 +225,12 @@ async def channels(message: types.Message):
     text = cfg.TEXT_SUBCRIBE
     for i, item in enumerate(admin_channels, 1):
         text += f"\n {i}. {item}"
-    await message.answer(text)
+    for i in admin_channels:
+        subscribded = await check_user_subscription(i, message.from_user.id)
+        if subscribded:
+            await message.answer("Вы подписаны на каналы!")
+        else:
+            await message.answer(text)
 
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
