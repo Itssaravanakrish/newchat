@@ -177,6 +177,10 @@ async def cancel_search_commands(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         await cancel_search(message)
 
+@dp.message_handler(commands=['channels'])
+async def channels(message: types.Message):
+    await message.answer(db.get_channels())
+
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:

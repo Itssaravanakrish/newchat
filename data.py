@@ -100,3 +100,8 @@ class DataBase:
         with self.connect:
             self.cursor.execute("UPDATE users SET dates=%s WHERE user_id=%s", (dates, user_id,))
             self.connect.commit()
+
+    def get_channels(self):
+        with self.connect:
+            self.cursor.execute("SELECT channel FROM channels")
+            return self.cursor.fetchone()
