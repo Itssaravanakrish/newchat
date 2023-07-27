@@ -180,7 +180,7 @@ async def cancel_search_commands(message: types.Message):
 @dp.message_handler(commands=['channels'])
 async def channels(message: types.Message):
     result_text = cfg.TEXT_SUBCRIBE + '1. ' + '\n 2. '.join(db.get_channels())
-    await message.answer()
+    await message.answer(result_text)
 
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
