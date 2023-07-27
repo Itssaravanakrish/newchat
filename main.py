@@ -73,6 +73,31 @@ async def search(message):
     else:
         await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
 
+#check admin in channel
+async def check_bot_admin_rights(channel_username):
+    try:
+        bot_info = await bot.get_me()
+
+        # Получаем информацию о членстве бота в канале по @username
+        chat_member = await bot.get_chat_member(f"{channel_username}", bot_info.id)
+
+        # Проверяем, есть ли у бота права администратора в канале
+        if chat_member.status == 'administrator':
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        # Если возникла ошибка, бот скорее всего не имеет прав администратора в канале
+        return False
+
+async def get_admin_channels(channel_usernames):
+    admin_channels = []
+    for channel_username in channel_usernames:
+        if await check_bot_admin_rights(channel_username):
+            admin_channels.append(channel_username)
+    return admin_channels
+
 #command cancel_search
 async def cancel_search(message):
     if db.get_queue(message.from_user.id):
@@ -179,8 +204,10 @@ async def cancel_search_commands(message: types.Message):
 
 @dp.message_handler(commands=['channels'])
 async def channels(message: types.Message):
+    chann = db.get_channels()
+    admin_channels = await get_admin_channels(chann)
     text = cfg.TEXT_SUBCRIBE
-    for i, item in enumerate(db.get_channels(), 1):
+    for i, item in enumerate(chann, 1):
         text += f"\n {i}. {item}"
     await message.answer(text)
 
