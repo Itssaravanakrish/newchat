@@ -104,4 +104,4 @@ class DataBase:
     def get_channels(self):
         with self.connect:
             self.cursor.execute("SELECT channel FROM channels")
-            return self.cursor.fetchone()
+            return self.cursor.fetchall()
