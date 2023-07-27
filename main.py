@@ -182,7 +182,7 @@ async def channels(message: types.Message):
     text = cfg.TEXT_SUBCRIBE
     for i, item in enumerate(db.get_channels(), 1):
         text += f"\n {i}. {item}"
-        await message.answer(text)
+    await message.answer(text)
 
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
