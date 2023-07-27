@@ -207,7 +207,7 @@ async def channels(message: types.Message):
     chann = db.get_channels()
     admin_channels = await get_admin_channels(chann)
     text = cfg.TEXT_SUBCRIBE
-    for i, item in enumerate(chann, 1):
+    for i, item in enumerate(admin_channels, 1):
         text += f"\n {i}. {item}"
     await message.answer(text)
 
