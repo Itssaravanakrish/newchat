@@ -101,9 +101,8 @@ async def get_admin_channels(channel_usernames):
 #check subcribed user in channel
 async def check_user_subscription(channel_username, user_id):
     try:
-        chat = await bot.get_chat(channel_username)
         # Получаем информацию о членстве пользователя в канале
-        chat_member = await bot.get_chat_member(chat.id, user_id)
+        chat_member = await bot.get_chat_member(f"{channel_username}", user_id)
 
         # Проверяем, является ли пользователь участником канала
         if chat_member.status == 'member':
