@@ -99,13 +99,16 @@ async def get_admin_channels(channel_usernames):
     return admin_channels
 
 #check subcribed user in channel
-async def check_user_subscription(channel_username, user_id):
+async def check_user_subscription(channel_username):
     try:
-        # Получаем информацию о членстве пользователя в канале
-        chat_member = await bot.get_chat_member(f"{channel_username}", user_id)
+        channel_info = await bot.get_chat(f"@{channel_username}")
+        channel_id = channel_info.id
+
+        # Получаем количество участников канала
+        chat_member_count = await bot.get_chat_member_count(channel_id)
 
         # Проверяем, является ли пользователь участником канала
-        if chat_member.status == 'member':
+        if chat_member_count > 0:
             return True
         else:
             return False
@@ -226,7 +229,7 @@ async def channels(message: types.Message):
     for i, item in enumerate(admin_channels, 1):
         text += f"\n {i}. {item}"
     for i in admin_channels:
-        subscribded = await check_user_subscription(i, message.from_user.id)
+        subscribded = await check_user_subscription(i)
         if subscribded:
             await message.answer("Вы подписаны на каналы!")
         else:
