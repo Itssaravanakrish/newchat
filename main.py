@@ -55,7 +55,7 @@ async def search(message):
                 text += f"\n {i}. {item}"
             for i in admin_channels:
                 subscribded = await check_user_subscription(i, message.from_user.id)
-                if subscribded:
+                if subscribded or db.get_channels() is None:
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                     button1 = types.KeyboardButton(cfg.STOP_SEARCH)
                     markup.add(button1)
