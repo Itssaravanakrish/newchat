@@ -6,7 +6,6 @@ from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from datetime import datetime, timedelta
 from aiogram.types.message import ContentType
-from aiogram.utils import exceptions
 import config as cfg
 import logging
 import functions as func
@@ -49,13 +48,13 @@ async def search(message):
     queue_info = db.get_queue(message.from_user.id)
     if chat_info == False:
         if queue_info == False:
-            chann = db.get_channels()
-            admin_channels = await get_admin_channels(chann)
-            text = cfg.TEXT_SUBCRIBE
-            for i, item in enumerate(admin_channels, 1):
-                text += f"\n {i}. {item}"
-            for i in admin_channels:
-                if db.check_channels() and check_channel_existence(i):
+            if db.check_channels():
+                chann = db.get_channels()
+                admin_channels = await get_admin_channels(chann)
+                text = cfg.TEXT_SUBCRIBE
+                for i, item in enumerate(admin_channels, 1):
+                    text += f"\n {i}. {item}"
+                for i in admin_channels:
                     subscribded = await check_user_subscription(i, message.from_user.id)
                     if subscribded:
                         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
@@ -80,27 +79,27 @@ async def search(message):
                                 await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
                     else:
                         await message.answer(text)
+            else:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                button1 = types.KeyboardButton(cfg.STOP_SEARCH)
+                markup.add(button1)
+
+                chat_two = db.get_user_queue()
+
+                if db.create_chat(message.from_user.id, chat_two) == False:
+                    db.add_queue(message.from_user.id)
+                    await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
                 else:
-                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    button1 = types.KeyboardButton(cfg.STOP_SEARCH)
-                    markup.add(button1)
-
-                    chat_two = db.get_user_queue()
-
-                    if db.create_chat(message.from_user.id, chat_two) == False:
-                        db.add_queue(message.from_user.id)
-                        await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                    else:
-                        try:
-                            await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                            await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        except BotBlocked:
-                            db.delete_chat(message.from_user.id)
-                            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                            button1 = types.KeyboardButton(cfg.SEARCH)
-                            button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                            markup.add(button1, button2)
-                            await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+                    try:
+                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                    except BotBlocked:
+                        db.delete_chat(message.from_user.id)
+                        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                        button1 = types.KeyboardButton(cfg.SEARCH)
+                        button2 = types.KeyboardButton(cfg.SEARCH_MALE)
+                        markup.add(button1, button2)
+                        await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
             await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
     else:
@@ -157,19 +156,6 @@ async def cancel_search(message):
         await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
     else:
         await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
-
-#check channel really
-async def check_channel_existence(channel_username):
-    try:
-        chat = await bot.get_chat(channel_username)
-        if chat.type == types.ChatType.CHANNEL:
-            return True
-        else:
-            return False
-    except exceptions.ChatNotFound:
-        return False
-    except exceptions.TelegramAPIError as e:
-        return False
 
 @dp.callback_query_handler(state=register.reg_1)
 async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
