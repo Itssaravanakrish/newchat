@@ -107,3 +107,8 @@ class DataBase:
             a = self.cursor.fetchall()
             result = [item[0] for item in a]
             return result
+        
+    def check_channels(self):
+        with self.connect:
+            self.cursor.execute("SELECT channel FROM channels")
+            return self.cursor.fetchone()
