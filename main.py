@@ -310,9 +310,9 @@ async def settings_cl_func(message: types.Message, state: FSMContext):
         lang = db.get_lang(message.from_user.id)
         if message.text == cfg.CHANGE_LANGUAGE(lang):
             markup = types.InlineKeyboardMarkup(row_width=1)
-            button1 = types.InlineKeyboardButton(cfg.L(lang), callback_data='english')
-            button2 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='russian')
-            button3 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='armenian')
+            button1 = types.InlineKeyboardButton("English", callback_data='english')
+            button2 = types.InlineKeyboardButton("Русский", callback_data='russian')
+            button3 = types.InlineKeyboardButton("Հայերեն", callback_data='armenian')
             button4 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='back')
             markup.add(button1, button2, button3, button4)
             await message.answer(cfg.SELECT_LANGUAGE_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
