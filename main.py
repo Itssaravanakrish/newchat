@@ -14,8 +14,6 @@ bot = Bot(cfg.TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 db = DataBase('192.168.2.35', '5432', 'anonchat', 'anon_user', 'anon828282')
 
-# PRICE = types.LabeledPrice(label="Подписка на день", amount=500*100)
-
 class register(StatesGroup):
     reg_1 = State()
 
