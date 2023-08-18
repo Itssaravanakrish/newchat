@@ -82,7 +82,7 @@ def STOP_DIALOG_TEXT_SOBESEDNIK(language):
     elif language == 1:
         return "_Ваш собеседник закончил с вами диалог.\nДля того чтобы найти собеседника, напишите /search_"
     elif language == 2:
-        return
+        return "_Ձեր զրուցակիցն ավարտել է երկխոսությունը ձեզ հետ։\nԶրուցակցին գտնելու համար մուտքագրեք /search_"
 
 def CANCEL_STOP_DIALOG_TEXT(language):
     if language == 0:
