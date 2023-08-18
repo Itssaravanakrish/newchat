@@ -207,9 +207,9 @@ async def next(message: types.Message):
                 await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE(lang), parse_mode=types.ParseMode.MARKDOWN)
                 await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang_two), parse_mode=types.ParseMode.MARKDOWN)
         elif queue_info != False:
-            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
-        else:
             await message.answer(cfg.CANCEL_SEARCH_PROCESS(lang), parse_mode=types.ParseMode.MARKDOWN)
+        else:
+            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['link'])
 async def link(message: types.Message):
