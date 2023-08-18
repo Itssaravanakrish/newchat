@@ -58,8 +58,9 @@ async def search(message):
                 await message.answer(cfg.SEARCH_PROCESS(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 try:
+                    lang_two = db.get_lang(chat_two)
                     await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE(lang), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang_two), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
                     db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
@@ -185,8 +186,9 @@ async def next(message: types.Message):
                 db.add_queue(message.from_user.id)
                 await message.answer(cfg.SEARCH_PROCESS(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
+                lang_two = db.get_lang(chat_two)
                 await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE(lang), parse_mode=types.ParseMode.MARKDOWN)
-                await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang), parse_mode=types.ParseMode.MARKDOWN)
+                await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang_two), parse_mode=types.ParseMode.MARKDOWN)
         elif queue_info != False:
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
         else:
