@@ -44,9 +44,9 @@ async def start(message: types.Message):
 async def search(message):
     chat_info = db.get_active_chat(message.from_user.id)
     queue_info = db.get_queue(message.from_user.id)
+    lang = db.get_lang(message.from_user.id)
     if chat_info == False:
         if queue_info == False:
-            lang = db.get_lang(message.from_user.id)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(cfg.STOP_SEARCH(lang))
             markup.add(button1)
@@ -55,7 +55,7 @@ async def search(message):
 
             if db.create_chat(message.from_user.id, chat_two) == False:
                 db.add_queue(message.from_user.id)
-                await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+                await message.answer(cfg.SEARCH_PROCESS(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 try:
                     await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE(lang), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
@@ -65,11 +65,11 @@ async def search(message):
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                     button1 = types.KeyboardButton(cfg.SEARCH(lang))
                     markup.add(button1)
-                    await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+                    await message.answer(cfg.BOT_BLOCKED(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
-            await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CANCEL_SEARCH_PROCESS(lang), parse_mode=types.ParseMode.MARKDOWN)
     else:
-        await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+        await message.answer(cfg.CANCEL_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 #check admin in channel
 async def check_bot_admin_rights(channel_username):
@@ -89,29 +89,6 @@ async def check_bot_admin_rights(channel_username):
         # Если возникла ошибка, бот скорее всего не имеет прав администратора в канале
         return False
 
-async def get_admin_channels(channel_usernames):
-    admin_channels = []
-    for channel_username in channel_usernames:
-        if await check_bot_admin_rights(channel_username):
-            admin_channels.append(channel_username)
-    return admin_channels
-
-#check subcribed user in channel
-async def check_user_subscription(channel_username, user_id):
-    try:
-        # Получаем информацию о членстве пользователя в канале
-        chat_member = await bot.get_chat_member(f"{channel_username}", user_id)
-
-        # Проверяем, является ли пользователь участником канала
-        if chat_member.status == 'member' or chat_member.status == 'creator':
-            return True
-        else:
-            return False
-
-    except Exception as e:
-        # Если возникла ошибка, пользователь скорее всего не является участником канала
-        return False
-
 #command cancel_search
 async def cancel_search(message):
     lang = db.get_lang(message.from_user.id)
@@ -120,7 +97,7 @@ async def cancel_search(message):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
         button1 = types.KeyboardButton(cfg.SEARCH(lang))
         markup.add(button1)
-        await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+        await message.answer(cfg.STOP_SEARCH_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
     else:
         await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
