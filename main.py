@@ -256,7 +256,7 @@ async def text(message: types.Message):
             button_settings1 = types.KeyboardButton(cfg.CHANGE_LANGUAGE(lang))
             button_settings2 = types.KeyboardButton(cfg.BACK(lang))
             markup_settings.add(button_settings1, button_settings2)
-            await message.answer(cfg.SELECT_SETTINGS_TEXT(lang))
+            await message.answer(cfg.SELECT_SETTINGS_TEXT(lang), reply_markup=markup_settings)
             await Settings_cl.settings_1.set()
         else:
             chat_info = db.get_active_chat(message.from_user.id)
