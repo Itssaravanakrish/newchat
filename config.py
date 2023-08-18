@@ -223,3 +223,11 @@ def BACK_TEXT(language):
         return "Вы вернулись назад."
     elif language == 2:
         return "Դու վերադարձար:"
+
+def SELECT_SETTINGS_CORRECT(language):
+    if language == 0:
+        return "You have selected an option."
+    elif language == 1:
+        return "Вы выбрали опцию."
+    elif language == 2:
+        return "Դուք ընտրել եք տարբերակ:"

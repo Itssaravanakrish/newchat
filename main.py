@@ -315,7 +315,7 @@ async def settings_cl_func(message: types.Message, state: FSMContext):
             button3 = types.InlineKeyboardButton("Հայերեն", callback_data='armenian')
             button4 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='back')
             markup.add(button1, button2, button3, button4)
-            await message.answer("...", reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(cfg.SELECT_SETTINGS_CORRECT(lang), reply_markup=types.ReplyKeyboardRemove())
             await message.answer(cfg.SELECT_LANGUAGE_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await Settings_cl.language_change.set()
         elif message.text == cfg.BACK(lang):
@@ -364,6 +364,7 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
             button_settings1 = types.KeyboardButton(cfg.CHANGE_LANGUAGE(lang))
             button_settings2 = types.KeyboardButton(cfg.BACK(lang))
             markup_settings.add(button_settings1, button_settings2)
+            await callback_query.message.answer(cfg.SELECT_SETTINGS_CORRECT(lang), reply_markup=None)
             await callback_query.message.answer(cfg.SELECT_SETTINGS_TEXT(lang), reply_markup=markup_settings)
             await Settings_cl.settings_1.set()
 
