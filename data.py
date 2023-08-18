@@ -82,6 +82,17 @@ class DataBase:
             self.cursor.execute("SELECT lang FROM users WHERE user_id=%s", (user_id,))
             return self.cursor.fetchone()[0]
 
+    def get_lang_text(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT lang FROM users WHERE user_id=%s", (user_id,))
+            lang = self.cursor.fetchone()[0]
+            if lang == 0:
+                return "en"
+            elif lang == 1:
+                return "ru"
+            elif lang == 2:
+                return "hy"
+
     def add_dates(self, user_id, dates):
         with self.connect:
             self.cursor.execute("UPDATE users SET dates=%s WHERE user_id=%s", (dates, user_id,))

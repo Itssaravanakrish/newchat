@@ -155,7 +155,7 @@ def LINK(language, links):
     if language == 0:
         return f"The interlocutor sent you a {links} of his telegram account"
     elif language == 1:
-        return f"Собеседник отправил вам {links} своей телеграм аккаунта"
+        return f"Собеседник отправил вам {links} своего телеграм аккаунта"
     elif language == 2:
         return f"Զրուցակիցը ձեզ ուղարկել է իր telegram-ի {links}"
 
@@ -163,6 +163,6 @@ def LINK_SSILKA(language):
     if language == 0:
         return "link"
     elif language == 1:
-        return "Ссылку"
+        return "ссылку"
     elif language == 2:
         return "հղումը"

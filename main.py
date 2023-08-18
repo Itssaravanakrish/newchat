@@ -242,11 +242,13 @@ async def text(message: types.Message):
             if chat_info != False:
                 try:
                     lang_two = db.get_lang(chat_info)
+                    lang_text = db.get_lang_text(message.from_user.id)
+                    lang_text_two = db.get_lang_text(chat_info)
                     if message.text:
                         if lang == lang_two:
                             await dp.bot.send_message(chat_info, message.text)
-                        elif lang == 0 and lang_two == 1:
-                            await dp.bot.send_message(chat_info, text_translator(text=message.text, src='en', dest='ru'))
+                        else:
+                            await dp.bot.send_message(chat_info, text_translator(text=message.text, src=lang_text, dest=lang_text_two))
                     elif message.photo:
                         if message.caption:
                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
