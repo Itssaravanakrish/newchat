@@ -364,7 +364,6 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
             button_settings1 = types.KeyboardButton(cfg.CHANGE_LANGUAGE(lang))
             button_settings2 = types.KeyboardButton(cfg.BACK(lang))
             markup_settings.add(button_settings1, button_settings2)
-            await callback_query.message.answer(cfg.SELECT_SETTINGS_CORRECT(lang), reply_markup=None)
             await callback_query.message.answer(cfg.SELECT_SETTINGS_TEXT(lang), reply_markup=markup_settings)
             await Settings_cl.settings_1.set()
 
