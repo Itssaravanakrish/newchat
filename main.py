@@ -4,8 +4,6 @@ from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from datetime import datetime, timedelta
-from aiogram.types.message import ContentType
 import config as cfg
 import logging
 import functions as func
@@ -16,7 +14,7 @@ bot = Bot(cfg.TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 db = DataBase('192.168.2.35', '5432', 'anonchat', 'anon_user', 'anon828282')
 
-PRICE = types.LabeledPrice(label="Подписка на день", amount=500*100)
+# PRICE = types.LabeledPrice(label="Подписка на день", amount=500*100)
 
 class register(StatesGroup):
     reg_1 = State()
@@ -280,7 +278,7 @@ async def channels(message: types.Message):
     for i in admin_channels:
         subscribded = await check_user_subscription(i, message.from_user.id)
         if subscribded:
-            await message.answer("Вы подписаны на каналы!")
+            await message.answer("Вы подписаны на каналыn!")
         else:
             await message.answer(text)
 
