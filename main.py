@@ -178,7 +178,7 @@ async def stop(message: types.Message):
             markups = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             buttons1 = types.KeyboardButton(cfg.SEARCH(lang_two))
             buttons2 = types.KeyboardButton(cfg.SETTINGS(lang_two))
-            markup.add(buttons1, buttons2)
+            markups.add(buttons1, buttons2)
             await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang_two), reply_markup=markups, parse_mode=types.ParseMode.MARKDOWN)
         else:
