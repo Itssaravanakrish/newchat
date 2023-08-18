@@ -244,33 +244,33 @@ async def text(message: types.Message):
                     lang_two = db.get_lang(chat_info)
                     lang_text = db.get_lang_text(message.from_user.id)
                     lang_text_two = db.get_lang_text(chat_info)
-                    if message.text:
-                        try:
+                    try:
+                        if message.text:
                             if lang == lang_two:
                                 await dp.bot.send_message(chat_info, message.text)
                             else:
                                 await dp.bot.send_message(chat_info, text_translator(text=message.text, src=lang_text, dest=lang_text_two))
-                        except Exception as ex:
-                            await message.answer(cfg.ERROR_DOCUMENT(lang), parse_mode=types.ParseMode.MARKDOWN)
-                            print(f"[ERROR] {ex}")
-                    elif message.photo:
-                        if message.caption:
-                            if lang == lang_two:
-                                await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
+                        elif message.photo:
+                            if message.caption:
+                                if lang == lang_two:
+                                    await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
+                                else:
+                                    await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
                             else:
-                                await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
-                        else:
-                            await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
-                    elif message.video:
-                        if message.caption:
-                            if lang == lang_two:
-                                await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption)
+                                await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
+                        elif message.video:
+                            if message.caption:
+                                if lang == lang_two:
+                                    await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption)
+                                else:
+                                    await dp.bot.send_video(chat_info, message.video.file_id, caption=text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
                             else:
-                                await dp.bot.send_video(chat_info, message.video.file_id, caption=text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
+                                await dp.bot.send_video(chat_info, message.video.file_id)
                         else:
-                            await dp.bot.send_video(chat_info, message.video.file_id)
-                    else:
-                        await message.answer(cfg.CANCEL_DOCUMENT_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
+                            await message.answer(cfg.CANCEL_DOCUMENT_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
+                    except Exception as ex:
+                        await message.answer(cfg.ERROR_DOCUMENT(lang), parse_mode=types.ParseMode.MARKDOWN)
+                        print(f"[ERROR] {ex}")
                 except BotBlocked:
                     db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
