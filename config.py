@@ -1,5 +1,4 @@
 TOKEN = "5815738068:AAH0CLsYyazHP9XgR_1b66pYh02kXMsgxxM"
-PAYMENTS_TOKEN = "1744374395:TEST:9bc7a3556eb1e8bed305"
 
 REGISTER_TEXT = "_Для начало общения, вы должны выбрать ваш пол нажимая на кнопку._"
 ERROR_REGISTER = "_Вы должны выбрать пол, для общения с людьми.\nЕсли у вас возникла какая то ошибка, вводите команду /register_"
