@@ -77,9 +77,9 @@ class DataBase:
             else:
                 return False
 
-    def get_male(self, user_id):
+    def get_lang(self, user_id):
         with self.connect:
-            self.cursor.execute("SELECT male FROM users WHERE user_id=%s", (user_id,))
+            self.cursor.execute("SELECT lang FROM users WHERE user_id=%s", (user_id,))
             return self.cursor.fetchone()[0]
 
     def add_dates(self, user_id, dates):

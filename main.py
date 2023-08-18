@@ -24,19 +24,21 @@ async def start(message: types.Message):
         chat_info = db.get_active_chat(message.from_user.id)
         if(not db.check_user(message.from_user.id)):
             markup = types.InlineKeyboardMarkup(row_width=2)
-            button1 = types.InlineKeyboardButton(cfg.MALE, callback_data='male')
-            button2 = types.InlineKeyboardButton(cfg.FEMALE, callback_data='female')
-            markup.add(button1, button2)
-            await message.answer(cfg.REGISTER_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            button1 = types.InlineKeyboardButton("English", callback_data='english')
+            button2 = types.InlineKeyboardButton("Русский", callback_data='russian')
+            button3 = types.InlineKeyboardButton("Հայերեն", callback_data='armenian')
+            markup.add(button1, button2, button3)
+            await message.answer("SELLECT LANGUAGE", reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await register.reg_1.set()
         else:
+            lang = db.get_lang(message.from_user.id)
             if chat_info == False:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                button1 = types.KeyboardButton(cfg.SEARCH)
+                button1 = types.KeyboardButton(cfg.SEARCH(lang))
                 markup.add(button1)
-                await message.answer(cfg.START, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+                await message.answer(cfg.START(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
-                await message.answer(cfg.CANCEL_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+                await message.answer(cfg.CANCEL_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 #command search
 async def search(message):
@@ -44,8 +46,9 @@ async def search(message):
     queue_info = db.get_queue(message.from_user.id)
     if chat_info == False:
         if queue_info == False:
+            lang = db.get_lang(message.from_user.id)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            button1 = types.KeyboardButton(cfg.STOP_SEARCH)
+            button1 = types.KeyboardButton(cfg.STOP_SEARCH(lang))
             markup.add(button1)
 
             chat_two = db.get_user_queue()
@@ -55,14 +58,13 @@ async def search(message):
                 await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
                 try:
-                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE(lang), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
                     db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    button1 = types.KeyboardButton(cfg.SEARCH)
-                    button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                    markup.add(button1, button2)
+                    button1 = types.KeyboardButton(cfg.SEARCH(lang))
+                    markup.add(button1)
                     await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
             await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
@@ -112,30 +114,37 @@ async def check_user_subscription(channel_username, user_id):
 
 #command cancel_search
 async def cancel_search(message):
+    lang = db.get_lang(message.from_user.id)
     if db.get_queue(message.from_user.id):
         db.delete_queue(message.from_user.id)
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-        button1 = types.KeyboardButton(cfg.SEARCH)
+        button1 = types.KeyboardButton(cfg.SEARCH(lang))
         markup.add(button1)
         await message.answer(cfg.STOP_SEARCH_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
     else:
-        await message.answer(cfg.CANCEl_STOP_DIALOG_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+        await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.callback_query_handler(state=register.reg_1)
 async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
+        lang = db.get_lang(callback_query.from_user.id)
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-        button1 = types.KeyboardButton(cfg.SEARCH)
+        button1 = types.KeyboardButton(cfg.SEARCH(lang))
         markup.add(button1)
-        if callback_query.data == 'male':
-            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'male')
-            await callback_query.answer(cfg.MALE_CORRECT_TEXT)
-            await callback_query.message.answer(cfg.START, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+        if callback_query.data == 'english':
+            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 0)
+            await callback_query.answer(cfg.LANGUAGE_CORRECT_TEXT(lang))
+            await callback_query.message.answer(cfg.START(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await state.finish()
-        elif callback_query.data == 'female':
-            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 'female')
-            await callback_query.answer(cfg.FEMALE_CORRECT_TEXT)
-            await callback_query.message.answer(cfg.START, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+        elif callback_query.data == 'russian':
+            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 1)
+            await callback_query.answer(cfg.LANGUAGE_CORRECT_TEXT(lang))
+            await callback_query.message.answer(cfg.START(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await state.finish()
+        elif callback_query.data == 'armenian':
+            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 2)
+            await callback_query.answer(cfg.LANGUAGE_CORRECT_TEXT(lang))
+            await callback_query.message.answer(cfg.START(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await state.finish()
 
 @dp.message_handler(state=register.reg_1)
@@ -143,27 +152,29 @@ async def error_text_register(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         if message.text == "/register":
             markup = types.InlineKeyboardMarkup(row_width=2)
-            button1 = types.InlineKeyboardButton(cfg.MALE, callback_data='male')
-            button2 = types.InlineKeyboardButton(cfg.FEMALE, callback_data='female')
-            markup.add(button1, button2)
-            await message.answer(cfg.REGISTER_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            button1 = types.InlineKeyboardButton("English", callback_data='english')
+            button2 = types.InlineKeyboardButton("Русский", callback_data='russian')
+            button3 = types.InlineKeyboardButton("Հայերեն", callback_data='armenian')
+            markup.add(button1, button2, button3)
+            await message.answer("SELECT LANGUAGE", reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
-            await message.answer(cfg.ERROR_REGISTER, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.ERROR_REGISTER(), parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['stop'])
 async def stop(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         chat_info = db.get_active_chat(message.from_user.id)
+        lang = db.get_lang(message.from_user.id)
         if chat_info != False:
             db.delete_chat(message.from_user.id)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            button1 = types.KeyboardButton(cfg.SEARCH)
+            button1 = types.KeyboardButton(cfg.SEARCH(lang))
             markup.add(button1)
-            await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
 
-            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['search'])
 async def search_commands(message: types.Message):
@@ -175,82 +186,50 @@ async def next(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         chat_info = db.get_active_chat(message.from_user.id)
         queue_info = db.get_queue(message.from_user.id)
+        lang = db.get_lang(message.from_user.id)
         if chat_info != False:
             db.delete_chat(message.from_user.id)
             markups = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            buttons1 = types.KeyboardButton(cfg.SEARCH)
+            buttons1 = types.KeyboardButton(cfg.SEARCH(lang))
             markups.add(buttons1)
-            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK, reply_markup=markups, parse_mode=types.ParseMode.MARKDOWN)
+            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang), reply_markup=markups, parse_mode=types.ParseMode.MARKDOWN)
 
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-            button1 = types.KeyboardButton(cfg.STOP_SEARCH)
+            button1 = types.KeyboardButton(cfg.STOP_SEARCH(lang))
             markup.add(button1)
 
             chat_two = db.get_user_queue()
-            chann = db.get_channels()
-            admin_channels = await get_admin_channels(chann)
-            text = cfg.TEXT_SUBCRIBE
-            if db.check_channels():
-                for i, item in enumerate(admin_channels, 1):
-                    text += f"\n {i}. {item}"
-                for i in admin_channels:
-                    subscribded = await check_user_subscription(i, message.from_user.id)
-                    if subscribded:
-                        if db.create_chat(message.from_user.id, chat_two) == False:
-                            db.add_queue(message.from_user.id)
-                            await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                        else:
-                            await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
-                            await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
-                    else:
-                        markups = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                        buttons1 = types.KeyboardButton(cfg.SEARCH)
-                        markups.add(buttons1)
-                        await message.answer(text, reply_markup=markups)
+            if db.create_chat(message.from_user.id, chat_two) == False:
+                db.add_queue(message.from_user.id)
+                await message.answer(cfg.SEARCH_PROCESS(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
-                if db.create_chat(message.from_user.id, chat_two) == False:
-                    db.add_queue(message.from_user.id)
-                    await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                else:
-                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
-                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, parse_mode=types.ParseMode.MARKDOWN)
+                await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE(lang), parse_mode=types.ParseMode.MARKDOWN)
+                await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE(lang), parse_mode=types.ParseMode.MARKDOWN)
         elif queue_info != False:
-            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
         else:
-            await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CANCEL_SEARCH_PROCESS(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['link'])
 async def link(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         chat_info = db.get_active_chat(message.from_user.id)
+        lang = db.get_lang(message.from_user.id)
         if chat_info != False:
-            await dp.bot.send_message(chat_info, f"Собеседник отправил вам {func.nick_with_link('ссылку', message.from_user.id)} своей телеграм аккаунта", parse_mode=types.ParseMode.MARKDOWN)
-            await message.answer(cfg.CORRECT_MY_LINK, parse_mode=types.ParseMode.MARKDOWN)
+            await dp.bot.send_message(chat_info, cfg.LINK(lang, cfg.LINK_SSILKA(lang)), parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CORRECT_MY_LINK(lang), parse_mode=types.ParseMode.MARKDOWN)
         else:
-            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 @dp.message_handler(commands=['cancel'])
 async def cancel_search_commands(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         await cancel_search(message)
 
-@dp.message_handler(commands=['channels'])
-async def channels(message: types.Message):
-    chann = db.get_channels()
-    admin_channels = await get_admin_channels(chann)
-    text = cfg.TEXT_SUBCRIBE
-    for i, item in enumerate(admin_channels, 1):
-        text += f"\n {i}. {item}"
-    for i in admin_channels:
-        subscribded = await check_user_subscription(i, message.from_user.id)
-        if subscribded:
-            await message.answer("Вы подписаны на каналыn!")
-        else:
-            await message.answer(text)
-
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
+        lang = db.get_lang(message.from_user.id)
         if message.text == cfg.SEARCH:
             await search(message)
         elif message.text == cfg.STOP_SEARCH:
@@ -273,15 +252,15 @@ async def text(message: types.Message):
                         else:
                             await dp.bot.send_video(chat_info, message.video.file_id)
                     else:
-                        await message.answer(cfg.CANCEL_DOCUMENT_TEXT, parse_mode=types.ParseMode.MARKDOWN)
+                        await message.answer(cfg.CANCEL_DOCUMENT_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
                 except BotBlocked:
                     db.delete_chat(message.from_user.id)
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    button1 = types.KeyboardButton(cfg.SEARCH)
+                    button1 = types.KeyboardButton(cfg.SEARCH(lang))
                     markup.add(button1)
-                    await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+                    await message.answer(cfg.BOT_BLOCKED(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             elif queue_info == False:
-                await message.answer(cfg.CANCEL_TEXT_BOT, parse_mode=types.ParseMode.MARKDOWN)
+                await message.answer(cfg.CANCEL_TEXT_BOT(lang), parse_mode=types.ParseMode.MARKDOWN)
 
 
 
