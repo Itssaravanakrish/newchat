@@ -254,7 +254,7 @@ async def text(message: types.Message):
                             if lang == lang_two:
                                 await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                             else:
-                                await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=text_translator(text=message.text, src=lang_text, dest=lang_text_two))
+                                await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
                         else:
                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
                     elif message.video:
@@ -262,7 +262,7 @@ async def text(message: types.Message):
                             if lang == lang_two:
                                 await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption)
                             else:
-                                await dp.bot.send_video(chat_info, message.video.file_id, caption=text_translator(text=message.text, src=lang_text, dest=lang_text_two))
+                                await dp.bot.send_video(chat_info, message.video.file_id, caption=text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
                         else:
                             await dp.bot.send_video(chat_info, message.video.file_id)
                     else:
