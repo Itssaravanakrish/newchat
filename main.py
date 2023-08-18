@@ -4,6 +4,7 @@ from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from googletrans import Translator
 import config as cfg
 import logging
 import functions as func
@@ -17,6 +18,14 @@ db = DataBase('192.168.2.35', '5432', 'anonchat', 'anon_user', 'anon828282')
 class register(StatesGroup):
     reg_1 = State()
 
+def text_translator(text, src, dest):
+    try:
+        translator = Translator()
+        translations = translator.translate(text=text, src=src, dest=dest)
+
+        return translations.text
+    except Exception as es:
+        return es
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
@@ -231,8 +240,12 @@ async def text(message: types.Message):
             queue_info = db.get_queue(message.from_user.id)
             if chat_info != False:
                 try:
+                    lang_two = db.get_lang(chat_info)
                     if message.text:
-                        await dp.bot.send_message(chat_info, message.text)
+                        if lang == lang_two:
+                            await dp.bot.send_message(chat_info, message.text)
+                        elif lang == 0 and lang_two == 1:
+                            await dp.bot.send_message(chat_info, text_translator(text=message.text, src='en', dest='ru'))
                     elif message.photo:
                         if message.caption:
                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
