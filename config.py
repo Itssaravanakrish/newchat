@@ -175,3 +175,51 @@ def ERROR_DOCUMENT(language):
         return "Произошла ошибка, данный файл нельзя отправить"
     elif language == 2:
         return "Սխալ է տեղի ունեցել, այս ֆայլը չի կարող ուղարկվել"
+
+def SETTINGS(language):
+    if language == 0:
+        return "🔧 Settings"
+    elif language == 1:
+        return "🔧 Настройки"
+    elif language == 2:
+        return "🔧 Կարգավորումներ"
+
+def CHANGE_LANGUAGE(language):
+    if language == 0:
+        return "♻️Change language"
+    elif language == 1:
+        return "♻️Поменять язык"
+    elif language == 2:
+        return "♻️Փոխել լեզուն"
+
+def BACK(language):
+    if language == 0:
+        return "🔙 Back"
+    elif language == 1:
+        return "🔙 Назад"
+    elif language == 2:
+        return "🔙 Վերադառնալ"
+
+def SELECT_SETTINGS_TEXT(language):
+    if language == 0:
+        return "Choose the appropriate option:"
+    elif language == 1:
+        return "Выберите подходящую опцию:"
+    elif language == 2:
+        return "Ընտրեք համապատասխան տարբերակը:"
+
+def SELECT_LANGUAGE_TEXT(language):
+    if language == 0:
+        return "Select the language you want to change to."
+    elif language == 1:
+        return "Выберите язык, на которую хотите поменять."
+    elif language == 2:
+        return "Ընտրեք այն լեզուն, որին ցանկանում եք փոխել:"
+
+def BACK_TEXT(language):
+    if language == 0:
+        return "You are back."
+    elif language == 1:
+        return "Вы вернулись назад."
+    elif language == 2:
+        return "Դու վերադարձար:"
