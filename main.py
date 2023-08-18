@@ -235,9 +235,9 @@ async def cancel_search_commands(message: types.Message):
 async def text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         lang = db.get_lang(message.from_user.id)
-        if message.text == cfg.SEARCH:
+        if message.text == cfg.SEARCH(lang):
             await search(message)
-        elif message.text == cfg.STOP_SEARCH:
+        elif message.text == cfg.STOP_SEARCH(lang):
             await cancel_search(message)
         else:
             chat_info = db.get_active_chat(message.from_user.id)
