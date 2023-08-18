@@ -216,8 +216,9 @@ async def link(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         chat_info = db.get_active_chat(message.from_user.id)
         lang = db.get_lang(message.from_user.id)
+        lang_two = db.get_lang(chat_info)
         if chat_info != False:
-            await dp.bot.send_message(chat_info, cfg.LINK(lang, func.nick_with_link(cfg.LINK_SSILKA(lang), message.from_user.id)), parse_mode=types.ParseMode.MARKDOWN)
+            await dp.bot.send_message(chat_info, cfg.LINK(lang_two, func.nick_with_link(cfg.LINK_SSILKA(lang_two), message.from_user.id)), parse_mode=types.ParseMode.MARKDOWN)
             await message.answer(cfg.CORRECT_MY_LINK(lang), parse_mode=types.ParseMode.MARKDOWN)
         else:
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
