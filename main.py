@@ -44,58 +44,26 @@ async def search(message):
     queue_info = db.get_queue(message.from_user.id)
     if chat_info == False:
         if queue_info == False:
-            if db.check_channels():
-                chann = db.get_channels()
-                admin_channels = await get_admin_channels(chann)
-                text = cfg.TEXT_SUBCRIBE
-                for i, item in enumerate(admin_channels, 1):
-                    text += f"\n {i}. {item}"
-                for i in admin_channels:
-                    subscribded = await check_user_subscription(i, message.from_user.id)
-                    if subscribded:
-                        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                        button1 = types.KeyboardButton(cfg.STOP_SEARCH)
-                        markup.add(button1)
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(cfg.STOP_SEARCH)
+            markup.add(button1)
 
-                        chat_two = db.get_user_queue()
+            chat_two = db.get_user_queue()
 
-                        if db.create_chat(message.from_user.id, chat_two) == False:
-                            db.add_queue(message.from_user.id)
-                            await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                        else:
-                            try:
-                                await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                                await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                            except BotBlocked:
-                                db.delete_chat(message.from_user.id)
-                                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                                button1 = types.KeyboardButton(cfg.SEARCH)
-                                button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                                markup.add(button1, button2)
-                                await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                    else:
-                        await message.answer(text)
+            if db.create_chat(message.from_user.id, chat_two) == False:
+                db.add_queue(message.from_user.id)
+                await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             else:
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                button1 = types.KeyboardButton(cfg.STOP_SEARCH)
-                markup.add(button1)
-
-                chat_two = db.get_user_queue()
-
-                if db.create_chat(message.from_user.id, chat_two) == False:
-                    db.add_queue(message.from_user.id)
-                    await message.answer(cfg.SEARCH_PROCESS, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-                else:
-                    try:
-                        await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                    except BotBlocked:
-                        db.delete_chat(message.from_user.id)
-                        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                        button1 = types.KeyboardButton(cfg.SEARCH)
-                        button2 = types.KeyboardButton(cfg.SEARCH_MALE)
-                        markup.add(button1, button2)
-                        await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+                try:
+                    await dp.bot.send_message(message.from_user.id, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                    await dp.bot.send_message(chat_two, cfg.SEARCH_TRUE, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                except BotBlocked:
+                    db.delete_chat(message.from_user.id)
+                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                    button1 = types.KeyboardButton(cfg.SEARCH)
+                    button2 = types.KeyboardButton(cfg.SEARCH_MALE)
+                    markup.add(button1, button2)
+                    await message.answer(cfg.BOT_BLOCKED, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         else:
             await message.answer(cfg.CANCEL_SEARCH_PROCESS, parse_mode=types.ParseMode.MARKDOWN)
     else:
