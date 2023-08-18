@@ -11,9 +11,9 @@ class DataBase:
         )
         self.cursor = self.connect.cursor()
 
-    def add_user(self, user_id, first_name, username, male):
+    def add_user(self, user_id, first_name, username, lang):
         with self.connect:
-            self.cursor.execute("INSERT INTO users(user_id, first_name, username, male) VALUES(%s, %s, %s, %s)", (user_id, first_name, username, male,))
+            self.cursor.execute("INSERT INTO users(user_id, first_name, username, lang) VALUES(%s, %s, %s, %s)", (user_id, first_name, username, lang,))
             self.connect.commit()
 
     def check_user(self, user_id):
