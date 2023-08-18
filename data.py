@@ -16,6 +16,11 @@ class DataBase:
             self.cursor.execute("INSERT INTO users(user_id, first_name, username, lang) VALUES(%s, %s, %s, %s)", (user_id, first_name, username, lang,))
             self.connect.commit()
 
+    def add_lang(self, user_id, lang):
+        with self.connect:
+            self.cursor.execute("UPDATE users SET lang=%s WHERE user_id=%s", (lang, user_id,))
+            self.connect.commit()
+
     def check_user(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT user_id FROM users WHERE user_id=%s", (user_id,))

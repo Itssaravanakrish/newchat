@@ -310,7 +310,7 @@ async def settings_cl_func(message: types.Message, state: FSMContext):
         lang = db.get_lang(message.from_user.id)
         if message.text == cfg.CHANGE_LANGUAGE(lang):
             markup = types.InlineKeyboardMarkup(row_width=1)
-            button1 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='english')
+            button1 = types.InlineKeyboardButton(cfg.L(lang), callback_data='english')
             button2 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='russian')
             button3 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='armenian')
             button4 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='back')
@@ -332,7 +332,7 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         lang = db.get_lang(callback_query.from_user.id)
         if callback_query.data == 'english':
-            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 0)
+            db.add_lang(callback_query.from_user.id, 0)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(cfg.SEARCH(0))
             button2 = types.KeyboardButton(cfg.SETTINGS(0))
@@ -341,7 +341,7 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
             await callback_query.message.answer(cfg.START(0), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await state.finish()
         elif callback_query.data == 'russian':
-            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 1)
+            db.add_lang(callback_query.from_user.id, 1)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(cfg.SEARCH(1))
             button2 = types.KeyboardButton(cfg.SETTINGS(1))
@@ -350,7 +350,7 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
             await callback_query.message.answer(cfg.START(1), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await state.finish()
         elif callback_query.data == 'armenian':
-            db.add_user(callback_query.from_user.id, callback_query.from_user.first_name, callback_query.from_user.username, 2)
+            db.add_lang(callback_query.from_user.id, 2)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(cfg.SEARCH(2))
             button2 = types.KeyboardButton(cfg.SETTINGS(2))
