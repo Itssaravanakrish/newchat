@@ -166,3 +166,12 @@ def LINK_SSILKA(language):
         return "ссылку"
     elif language == 2:
         return "հղումը"
+
+
+def ERROR_DOCUMENT(language):
+    if language == 0:
+        return "An error occurred, this file cannot be sent"
+    elif language == 1:
+        return "Произошла ошибка, данный файл нельзя отправить"
+    elif language == 2:
+        "Սխալ է տեղի ունեցել, այս ֆայլը չի ​​կարող ուղարկվել"
