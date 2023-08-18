@@ -322,7 +322,7 @@ async def settings_cl_func(message: types.Message, state: FSMContext):
             button1 = types.KeyboardButton(cfg.SEARCH(lang))
             button2 = types.KeyboardButton(cfg.SETTINGS(lang))
             markup.add(button1, button2)
-            await message.answer(cfg.BACK_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.BACK_TEXT(lang), reply_markup=markup,parse_mode=types.ParseMode.MARKDOWN)
             await state.reset_state()
         else:
             await message.answer(cfg.SELECT_SETTINGS_TEXT(lang))
@@ -363,7 +363,7 @@ async def register_akk(callback_query: types.CallbackQuery, state: FSMContext):
             button_settings1 = types.KeyboardButton(cfg.CHANGE_LANGUAGE(lang))
             button_settings2 = types.KeyboardButton(cfg.BACK(lang))
             markup_settings.add(button_settings1, button_settings2)
-            await callback_query.message.answer(cfg.SELECT_SETTINGS_TEXT(lang))
+            await callback_query.message.answer(cfg.SELECT_SETTINGS_TEXT(lang), reply_markup=markup_settings)
             await Settings_cl.settings_1.set()
 
 if __name__ == '__main__':
