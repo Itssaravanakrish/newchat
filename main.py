@@ -154,8 +154,11 @@ async def stop(message: types.Message):
             button1 = types.KeyboardButton(cfg.SEARCH(lang))
             markup.add(button1)
             lang_two = db.get_lang(chat_info)
+            markups = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            buttons1 = types.KeyboardButton(cfg.SEARCH(lang_two))
+            markups.add(buttons1)
             await dp.bot.send_message(message.from_user.id, cfg.STOP_DIALOG_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
-            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang_two), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang_two), reply_markup=markups, parse_mode=types.ParseMode.MARKDOWN)
         else:
 
             await message.answer(cfg.CANCEl_STOP_SEARCH_TEXT(lang), parse_mode=types.ParseMode.MARKDOWN)
@@ -176,12 +179,16 @@ async def next(message: types.Message):
             markups = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             buttons1 = types.KeyboardButton(cfg.SEARCH(lang))
             markups.add(buttons1)
-            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang), reply_markup=markups, parse_mode=types.ParseMode.MARKDOWN)
+
+            lang_two = db.get_lang(chat_info)
+            markup_two = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button_two1 = types.KeyboardButton(cfg.SEARCH(lang_two))
+            markup_two.add(button_two1)
+            await dp.bot.send_message(chat_info, cfg.STOP_DIALOG_TEXT_SOBESEDNIK(lang_two), reply_markup=markup_two, parse_mode=types.ParseMode.MARKDOWN)
 
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(cfg.STOP_SEARCH(lang))
             markup.add(button1)
-
             chat_two = db.get_user_queue()
             if db.create_chat(message.from_user.id, chat_two) == False:
                 db.add_queue(message.from_user.id)
