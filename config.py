@@ -62,11 +62,11 @@ def SEARCH_TRUE(language):
 
 def STOP_DIALOG_TEXT(language):
     if language == 0:
-        return "_You have finished the dialogue with the interlocutor.\To find the interlocutor, type /search_"
+        return "_You have finished the dialogue with the interlocutor.\nTo find the interlocutor, type /search_"
     elif language == 1:
         return "_Вы закончили диалог с собеседником.\nДля того чтобы найти собеседника, напишите /search_"
     elif language == 2:
-        return "_Դուք ավարտել եք երկխոսությունը զրուցակցի հետ։\Զրուցակցին գտնելու համար մուտքագրեք /search_"
+        return "_Դուք ավարտել եք երկխոսությունը զրուցակցի հետ։\nԶրուցակցին գտնելու համար մուտքագրեք /search_"
 
 def SEARCH_DRUGOGO_TEXT(language):
     if language == 0:
@@ -74,7 +74,7 @@ def SEARCH_DRUGOGO_TEXT(language):
     elif language == 1:
         return "_Вы закончили диалог с собеседником и начали поиск нового собеседника._"
     elif language == 2:
-        return "_Դուք ավարտել եք երկխոսությունը զրուցակցի հետ և սկսել եք նոր զրուցակցի փնտրտուքները:"
+        return "_Դուք ավարտել եք երկխոսությունը զրուցակցի հետ և սկսել եք նոր զրուցակցի փնտրտուքները:_"
 
 def STOP_DIALOG_TEXT_SOBESEDNIK(language):
     if language == 0:
@@ -137,11 +137,11 @@ def CANCEL_TEXT_BOT(language):
 
 def LANGUAGE_CORRECT_TEXT(language):
     if language == 0:
-        return "You have successfully selected English"
+        return "_You have successfully selected English_"
     elif language == 1:
-        return "Вы успешно выбрали русский язык"
+        return "_Вы успешно выбрали русский язык_"
     elif language == 2:
-        return "Դուք հաջողությամբ ընտրել եք հայերենը"
+        return "_Դուք հաջողությամբ ընտրել եք հայերենը_"
 
 def CANCEL_DOCUMENT_TEXT(language):
     if language == 0:
@@ -149,15 +149,15 @@ def CANCEL_DOCUMENT_TEXT(language):
     elif language == 1:
         return "_Вы можете отправить только текст или фото!_"
     elif language == 2:
-        return "_Դուք կարող եք ուղարկել միայն տեքստ կամ լուսանկար:"
+        return "_Դուք կարող եք ուղարկել միայն տեքստ կամ լուսանկար:_"
 
 def LINK(language, links):
     if language == 0:
-        return f"The interlocutor sent you a {links} of his telegram account"
+        return f"_The interlocutor sent you a {links} of his telegram account_"
     elif language == 1:
-        return f"Собеседник отправил вам {links} своего телеграм аккаунта"
+        return f"_Собеседник отправил вам {links} своего телеграм аккаунта_"
     elif language == 2:
-        return f"Զրուցակիցը ձեզ ուղարկել է իր telegram-ի {links}"
+        return f"_Զրուցակիցը ձեզ ուղարկել է իր telegram-ի {links}_"
 
 def LINK_SSILKA(language):
     if language == 0:
@@ -170,11 +170,11 @@ def LINK_SSILKA(language):
 
 def ERROR_DOCUMENT(language):
     if language == 0:
-        return "An error occurred, this file cannot be sent"
+        return "_An error occurred, this file cannot be sent_"
     elif language == 1:
-        return "Произошла ошибка, данный файл нельзя отправить"
+        return "_Произошла ошибка, данный файл нельзя отправить_"
     elif language == 2:
-        return "Սխալ է տեղի ունեցել, այս ֆայլը չի կարող ուղարկվել"
+        return "_Սխալ է տեղի ունեցել, այս ֆայլը չի կարող ուղարկվել_"
 
 def SETTINGS(language):
     if language == 0:
@@ -186,11 +186,11 @@ def SETTINGS(language):
 
 def CHANGE_LANGUAGE(language):
     if language == 0:
-        return "♻️Change language"
+        return "♻️_Change language_"
     elif language == 1:
-        return "♻️Поменять язык"
+        return "♻️_Поменять язык_"
     elif language == 2:
-        return "♻️Փոխել լեզուն"
+        return "♻️_Փոխել լեզուն_"
 
 def BACK(language):
     if language == 0:
@@ -202,32 +202,32 @@ def BACK(language):
 
 def SELECT_SETTINGS_TEXT(language):
     if language == 0:
-        return "Choose the appropriate option:"
+        return "_Choose the appropriate option:_"
     elif language == 1:
-        return "Выберите подходящую опцию:"
+        return "_Выберите подходящую опцию:_"
     elif language == 2:
-        return "Ընտրեք համապատասխան տարբերակը:"
+        return "_Ընտրեք համապատասխան տարբերակը:_"
 
 def SELECT_LANGUAGE_TEXT(language):
     if language == 0:
-        return "Select the language you want to change to."
+        return "_Select the language you want to change to._"
     elif language == 1:
-        return "Выберите язык, на которую хотите поменять."
+        return "_Выберите язык, на которую хотите поменять._"
     elif language == 2:
-        return "Ընտրեք այն լեզուն, որին ցանկանում եք փոխել:"
+        return "_Ընտրեք այն լեզուն, որին ցանկանում եք փոխել:_"
 
 def BACK_TEXT(language):
     if language == 0:
-        return "You are back."
+        return "_You are back._"
     elif language == 1:
-        return "Вы вернулись назад."
+        return "_Вы вернулись назад._"
     elif language == 2:
-        return "Դու վերադարձար:"
+        return "_Դու վերադարձար:_"
 
 def SELECT_SETTINGS_CORRECT(language):
     if language == 0:
-        return "You have selected an option."
+        return "_You have selected an option._"
     elif language == 1:
-        return "Вы выбрали опцию."
+        return "_Вы выбрали опцию._"
     elif language == 2:
-        return "Դուք ընտրել եք տարբերակ:"
+        return "_Դուք ընտրել եք տարբերակ:_"
