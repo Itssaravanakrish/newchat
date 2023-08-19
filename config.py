@@ -78,7 +78,7 @@ def SEARCH_DRUGOGO_TEXT(language):
 
 def STOP_DIALOG_TEXT_SOBESEDNIK(language):
     if language == 0:
-        return "_Your interlocutor has finished the dialogue with you.\To find the interlocutor, type /search_"
+        return "_Your interlocutor has finished the dialogue with you.\nTo find the interlocutor, type /search_"
     elif language == 1:
         return "_Ваш собеседник закончил с вами диалог.\nДля того чтобы найти собеседника, напишите /search_"
     elif language == 2:
@@ -231,3 +231,7 @@ def SELECT_SETTINGS_CORRECT(language):
         return "_Вы выбрали опцию._"
     elif language == 2:
         return "_Դուք ընտրել եք տարբերակ:_"
+
+
+def ERROR_ACCOUNT():
+    return "|You do not have a language selected, in order to select a language, write the /start command.\n\nУ вас не выбран язык, для того чтобы выбрать язык, пишите команду /start.\n\nԴուք ընտրված լեզու չունեք, լեզու ընտրելու համար գրեք /start հրամանը։_"
