@@ -315,7 +315,7 @@ async def settings_cl_func(message: types.Message, state: FSMContext):
             button3 = types.InlineKeyboardButton("Հայերեն", callback_data='armenian')
             button4 = types.InlineKeyboardButton(cfg.BACK(lang), callback_data='back')
             markup.add(button1, button2, button3, button4)
-            await message.answer(cfg.SELECT_SETTINGS_CORRECT(lang), reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(cfg.SELECT_SETTINGS_CORRECT(lang), reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
             await message.answer(cfg.SELECT_LANGUAGE_TEXT(lang), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await Settings_cl.language_change.set()
         elif message.text == cfg.BACK(lang):
