@@ -42,7 +42,7 @@ async def start(message: types.Message):
             button2 = types.InlineKeyboardButton("Русский", callback_data='russian')
             button3 = types.InlineKeyboardButton("Հայերեն", callback_data='armenian')
             markup.add(button1, button2, button3)
-            await message.answer("SELLECT LANGUAGE", reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.SELECT_LANGUAGE_BEGIN(), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await Register.reg_1.set()
         else:
             lang = db.get_lang(message.from_user.id)

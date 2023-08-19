@@ -235,3 +235,6 @@ def SELECT_SETTINGS_CORRECT(language):
 
 def ERROR_ACCOUNT():
     return "_You do not have a language selected, in order to select a language, write the /start command._\n\n_У вас не выбран язык, для того чтобы выбрать язык, пишите команду /start._\n\n_Դուք ընտրված լեզու չունեք, լեզու ընտրելու համար գրեք /start հրամանը։_"
+
+def SELECT_LANGUAGE_BEGIN():
+    return "_To start a conversation, select the language in which you will communicate._\n\n_Для начала беседы, выберите язык на котором будете общаться._\n\n_Զրույց սկսելու համար ընտրեք լեզուն, որով հաղորդակցվելու եք:_"
