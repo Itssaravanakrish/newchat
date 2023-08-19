@@ -62,7 +62,7 @@ def SEARCH_TRUE(language):
 
 def STOP_DIALOG_TEXT(language):
     if language == 0:
-        return "You have finished the dialogue with the interlocutor.\To find the interlocutor, type /search_"
+        return "_You have finished the dialogue with the interlocutor.\To find the interlocutor, type /search_"
     elif language == 1:
         return "_Вы закончили диалог с собеседником.\nДля того чтобы найти собеседника, напишите /search_"
     elif language == 2:
