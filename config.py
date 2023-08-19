@@ -1,15 +1,15 @@
 TOKEN = "5815738068:AAH0CLsYyazHP9XgR_1b66pYh02kXMsgxxM"
 
 def ERROR_REGISTER():
-    return "_You must select a gender to communicate with people.\nIf you encounter any error, enter the /register command_\n\n_Вы должны выбрать пол, для общения с людьми.\nЕсли у вас возникла какая то ошибка, вводите команду /register_\n\n_Մարդկանց հետ շփվելու համար դուք պետք է ընտրեք ձեր սեռը:\Եթե ունեք որևէ սխալ, մուտքագրեք /register հրամանը:_"
+    return "_You must select a gender to communicate with people._\n_If you encounter any error, enter the /register command_\n\n_Вы должны выбрать пол, для общения с людьми._\n_Если у вас возникла какая то ошибка, вводите команду /register_\n\n_Մարդկանց հետ շփվելու համար դուք պետք է ընտրեք ձեր սեռը:\Եթե ունեք որևէ սխալ, մուտքագրեք /register հրամանը:_"
 
 def START(language):
     if language == 0:
-        return "_Hello! Welcome to the anonymous chat.\nTo find someone, type /search, or click the button below._"
+        return "_Hello! Welcome to the anonymous chat._\n_To find someone, type /search, or click the button below._"
     elif language == 1:
-        return "_Привет! Добро пожаловать в анонимный чат.\nДля того чтобы найти собеседника, напишите /search, или нажмите на кнопку ниже._"
+        return "_Привет! Добро пожаловать в анонимный чат._\n_Для того чтобы найти собеседника, напишите /search, или нажмите на кнопку ниже._"
     elif language == 2:
-        return "_Ողջույն: Բարի գալուստ անանուն զրույց:\nԻնչ-որ մեկին գտնելու համար մուտքագրեք /search կամ սեղմեք ներքևի կոճակը:_"
+        return "_Ողջույն: Բարի գալուստ անանուն զրույց:_\n_Ինչ-որ մեկին գտնելու համար մուտքագրեք /search կամ սեղմեք ներքևի կոճակը:_"
 
 def SEARCH(language):
     if language == 0:
@@ -54,19 +54,19 @@ def STOP_SEARCH_TEXT(language):
 
 def SEARCH_TRUE(language):
     if language == 0:
-        return """_Interlocutor found 🦊\n\n/next - search for a new interlocutor\n/stop - stop dialogue_\n/link - send your telegram\n\n`https://t.me/AnonymChatyBot`"""
+        return """_Interlocutor found _🦊\n\n_/next - search for a new interlocutor_\n_/stop - stop dialogue_\n_/link - send your telegram_\n\n`https://t.me/AnonymChatyBot`"""
     elif language == 1:
-        return """_Собеседник найден 🦊\n\n/next - искать нового собеседника\n/stop - остановить диалог_\n/link - отправить свой телеграм\n\n`https://t.me/AnonymChatyBot`"""
+        return """_Собеседник найден _🦊\n\n_/next - искать нового собеседника_\n_/stop - остановить диалог_\n_/link - отправить свой телеграм_\n\n`https://t.me/AnonymChatyBot`"""
     elif language == 2:
-        return """_Գտնվել է զրուցակիցը 🦊\n\n/next - որոնել նոր զրուցակից\n/stop - դադարեցնել երկխոսությունը_\n/link - ուղարկել ձեր telegram-ը\n\n`https://t.me/AnonymChatyBot`"""
+        return """_Գտնվել է զրուցակիցը _🦊\n\n_/next - որոնել նոր զրուցակից_\n_/stop - դադարեցնել երկխոսությունը_\n_/link - ուղարկել ձեր telegram-ը_\n\n`https://t.me/AnonymChatyBot`"""
 
 def STOP_DIALOG_TEXT(language):
     if language == 0:
-        return "_You have finished the dialogue with the interlocutor.\nTo find the interlocutor, type /search_"
+        return "_You have finished the dialogue with the interlocutor._\n_To find the interlocutor, type /search_"
     elif language == 1:
-        return "_Вы закончили диалог с собеседником.\nДля того чтобы найти собеседника, напишите /search_"
+        return "_Вы закончили диалог с собеседником._\n_Для того чтобы найти собеседника, напишите /search_"
     elif language == 2:
-        return "_Դուք ավարտել եք երկխոսությունը զրուցակցի հետ։\nԶրուցակցին գտնելու համար մուտքագրեք /search_"
+        return "_Դուք ավարտել եք երկխոսությունը զրուցակցի հետ։_\n_Զրուցակցին գտնելու համար մուտքագրեք /search_"
 
 def SEARCH_DRUGOGO_TEXT(language):
     if language == 0:
@@ -78,11 +78,11 @@ def SEARCH_DRUGOGO_TEXT(language):
 
 def STOP_DIALOG_TEXT_SOBESEDNIK(language):
     if language == 0:
-        return "_Your interlocutor has finished the dialogue with you.\nTo find the interlocutor, type /search_"
+        return "_Your interlocutor has finished the dialogue with you._\n_To find the interlocutor, type /search_"
     elif language == 1:
-        return "_Ваш собеседник закончил с вами диалог.\nДля того чтобы найти собеседника, напишите /search_"
+        return "_Ваш собеседник закончил с вами диалог._\n_Для того чтобы найти собеседника, напишите /search_"
     elif language == 2:
-        return "_Ձեր զրուցակիցն ավարտել է երկխոսությունը ձեզ հետ։\nԶրուցակցին գտնելու համար մուտքագրեք /search_"
+        return "_Ձեր զրուցակիցն ավարտել է երկխոսությունը ձեզ հետ։_\n_Զրուցակցին գտնելու համար մուտքագրեք /search_"
 
 def CANCEL_STOP_DIALOG_TEXT(language):
     if language == 0:
@@ -234,4 +234,4 @@ def SELECT_SETTINGS_CORRECT(language):
 
 
 def ERROR_ACCOUNT():
-    return "|You do not have a language selected, in order to select a language, write the /start command.\n\nУ вас не выбран язык, для того чтобы выбрать язык, пишите команду /start.\n\nԴուք ընտրված լեզու չունեք, լեզու ընտրելու համար գրեք /start հրամանը։_"
+    return "_You do not have a language selected, in order to select a language, write the /start command._\n\n_У вас не выбран язык, для того чтобы выбрать язык, пишите команду /start._\n\n_Դուք ընտրված լեզու չունեք, լեզու ընտրելու համար գրեք /start հրամանը։_"
