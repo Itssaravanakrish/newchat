@@ -69,7 +69,6 @@ class DataBase:
             self.cursor.execute("DELETE FROM chats WHERE chat_one=%s OR chat_two=%s", (user_id, user_id,))
             self.connect.commit()
 
-
     def get_active_chat(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT * FROM chats WHERE chat_one=%s OR chat_two=%s", (user_id, user_id,))

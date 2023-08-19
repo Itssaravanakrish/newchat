@@ -186,11 +186,11 @@ def SETTINGS(language):
 
 def CHANGE_LANGUAGE(language):
     if language == 0:
-        return "♻️_Change language_"
+        return "♻️Change language"
     elif language == 1:
-        return "♻️_Поменять язык_"
+        return "♻️Поменять язык"
     elif language == 2:
-        return "♻️_Փոխել լեզուն_"
+        return "♻️Փոխել լեզուն"
 
 def BACK(language):
     if language == 0:
