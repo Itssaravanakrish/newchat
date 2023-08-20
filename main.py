@@ -278,13 +278,13 @@ async def text(message: types.Message):
                                 if lang == lang_two:
                                     await dp.bot.send_message(chat_info, message.text)
                                 else:
-                                    await dp.bot.send_message(chat_info, message.text + f'\n\n{cfg.TRANSLATE_TEXT(lang)}\n' + text_translator(text=message.text, src=lang_text, dest=lang_text_two))
+                                    await dp.bot.send_message(chat_info, message.text + f'\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n' + text_translator(text=message.text, src=lang_text, dest=lang_text_two))
                             elif message.photo:
                                 if message.caption:
                                     if lang == lang_two:
                                         await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                                     else:
-                                        await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption + f'\n\n{cfg.TRANSLATE_TEXT(lang)}\n' + text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
+                                        await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption + f'\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n' + text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
                                 else:
                                     await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
                             elif message.video:
@@ -292,7 +292,7 @@ async def text(message: types.Message):
                                     if lang == lang_two:
                                         await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption)
                                     else:
-                                        await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption + f'\n\n{cfg.TRANSLATE_TEXT(lang)}\n' + text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
+                                        await dp.bot.send_video(chat_info, message.video.file_id, caption=message.caption + f'\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n' + text_translator(text=message.caption, src=lang_text, dest=lang_text_two))
                                 else:
                                     await dp.bot.send_video(chat_info, message.video.file_id)
                             else:
