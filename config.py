@@ -238,3 +238,11 @@ def ERROR_ACCOUNT():
 
 def SELECT_LANGUAGE_BEGIN():
     return "_To start a conversation, select the language in which you will communicate._\n\n_Для начала беседы, выберите язык на котором будете общаться._\n\n_Զրույց սկսելու համար ընտրեք լեզուն, որով հաղորդակցվելու եք:_"
+
+def TRANSLATE_TEXT(language):
+    if language == 0:
+        return "Translation:"
+    elif language == 1:
+        return "Перевод:"
+    elif language == 2:
+        return "Թարգմանություն:"
