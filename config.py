@@ -153,11 +153,11 @@ def CANCEL_DOCUMENT_TEXT(language):
 
 def LINK(language, links):
     if language == 0:
-        return f"_The interlocutor sent you a {links} of his telegram account_"
+        return f"The interlocutor sent you a {links} of his telegram account"
     elif language == 1:
-        return f"_Собеседник отправил вам {links} своего телеграм аккаунта_"
+        return f"Собеседник отправил вам {links} своего телеграм аккаунта"
     elif language == 2:
-        return f"_Զրուցակիցը ձեզ ուղարկել է իր telegram-ի {links}_"
+        return f"Զրուցակիցը ձեզ ուղարկել է իր telegram-ի {links}"
 
 def LINK_SSILKA(language):
     if language == 0:
