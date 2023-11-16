@@ -4,7 +4,7 @@ from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from googletrans import Translator, LANGUAGES
+from deep_translator import GoogleTranslator
 import config as cfg
 import logging
 import functions as func
@@ -24,13 +24,12 @@ class Settings_cl(StatesGroup):
     language_change = State()
 
 
+
 def text_translator(text, src, dest):
     try:
-        translator = Translator()
-        if src not in LANGUAGES or dest not in LANGUAGES:
-            raise ValueError("Invalid source or destination language")
-        translation = translator.translate(text, src=src, dest=dest)
-        return translation.text
+        translator = GoogleTranslator(source=src, target=dest)
+        translation = translator.translate(text)
+        return translation
     except Exception as e:
         return f"Error: {e}"
 
