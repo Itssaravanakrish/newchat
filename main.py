@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 bot = Bot(cfg.TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = DataBase('localhost', '5432', 'anonim', 'anonim_user', 'anonim_pass')
+db = DataBase("192.168.1.37", "5432", "anonim", "anonim_user", "anonim_pass")
 
 class Register(StatesGroup):
     reg_1 = State()
