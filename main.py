@@ -29,7 +29,10 @@ def text_translator(text, src, dest):
     try:
         translator = GoogleTranslator(source=src, target=dest)
         translation = translator.translate(text)
-        return translation
+        if translation is None:
+            return None
+        else:
+            return translation
     except Exception as e:
         return f"Error: {e}"
 
@@ -280,7 +283,7 @@ async def text(message: types.Message):
                                     await dp.bot.send_message(chat_info, message.text)
                                 else:
                                     translation = text_translator(text=message.text, src=lang_text, dest=lang_text_two)
-                                    if message.text == translation:
+                                    if message.text == translation or translation is None:
                                         await dp.bot.send_message(chat_info, message.text)
                                     else:
                                         await dp.bot.send_message(chat_info, f"{message.text}\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n{translation}")
@@ -290,7 +293,7 @@ async def text(message: types.Message):
                                         await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                                     else:
                                         translation = text_translator(text=message.caption, src=lang_text, dest=lang_text_two)
-                                        if message.text == translation:
+                                        if message.text == translation or translation is None:
                                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                                         else:
                                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=f"{message.caption}\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n{translation}")
