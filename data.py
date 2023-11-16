@@ -74,10 +74,10 @@ class DataBase:
             self.cursor.execute("SELECT * FROM chats WHERE chat_one=%s OR chat_two=%s", (user_id, user_id,))
             users = self.cursor.fetchone()
             if users is not None:
-                if users[1] == user_id:
-                    return users[2]
-                elif users[2] == user_id:
+                if users[0] == user_id:
                     return users[1]
+                elif users[1] == user_id:
+                    return users[0]
             else:
                 return False
 
