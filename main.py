@@ -293,7 +293,7 @@ async def text(message: types.Message):
                                         if message.text == translation:
                                             await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=message.caption)
                                         else:
-                                            await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=f"{message.caption}\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n{}")
+                                            await dp.bot.send_photo(chat_info, message.photo[-1].file_id, caption=f"{message.caption}\n\n{cfg.TRANSLATE_TEXT(lang_two)}\n{translation}")
                                 else:
                                     await dp.bot.send_photo(chat_info, message.photo[-1].file_id)
                             elif message.video:
