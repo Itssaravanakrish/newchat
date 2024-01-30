@@ -1,4 +1,4 @@
-TOKEN = "6788017832:AAEPNQrHGLo3Oa0WroP-wbLH1YdkanHVqm8"
+TOKEN = "6318256885:AAFvBL_LqoPm0rXavgsegREqnwRxNCqTAvM"
 
 def ERROR_REGISTER():
     return "_You must select a gender to communicate with people._\n_If you encounter any error, enter the /register command_\n\n_Вы должны выбрать пол, для общения с людьми._\n_Если у вас возникла какая то ошибка, вводите команду /register_\n\n_Մարդկանց հետ շփվելու համար դուք պետք է ընտրեք ձեր սեռը:\Եթե ունեք որևէ սխալ, մուտքագրեք /register հրամանը:_"
